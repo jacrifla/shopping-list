@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Title = ({ children, icon, className }) => {
+const Title = ({ children, icon = null, className = '' }) => {
   return (
     <h1 className={className}>
       {icon && <span className={`icon-${icon}`} />} {children}
@@ -13,11 +13,6 @@ Title.propTypes = {
   children: PropTypes.node.isRequired,
   icon: PropTypes.string,
   className: PropTypes.string,
-};
-
-Title.defaultProps = {
-  icon: null,
-  className: '',
 };
 
 export default Title;

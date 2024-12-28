@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ type, placeholder, value, onChange, icon }) => {
+const Input = ({ type = 'text', placeholder = '', value, onChange, icon = null, readOnly = false }) => {
   return (
     <div className="input-group rounded">
       {icon && (
@@ -15,6 +15,7 @@ const Input = ({ type, placeholder, value, onChange, icon }) => {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        readOnly={readOnly}
       />
     </div>
   );
@@ -26,12 +27,7 @@ Input.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   icon: PropTypes.string,
-};
-
-Input.defaultProps = {
-  type: 'text',
-  placeholder: '',
-  icon: null,
+  readOnly: PropTypes.bool,
 };
 
 export default Input;

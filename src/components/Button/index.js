@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 const Button = ({ children, onClick, className, icon }) => {
   return (
     <button
-      className={`btn ${className} rounded-pill`} // 'rounded-pill' deixa o botão bem arredondado
+      className={`btn ${className} rounded-pill`}
       onClick={onClick}
     >
-      {icon && <span className={`icon-${icon}`} />} {children}
+      {icon && <i className={`bi bi-${icon} me-2`}></i>}
+      {children}
     </button>
   );
 };
