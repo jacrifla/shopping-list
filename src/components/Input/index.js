@@ -6,7 +6,7 @@ const Input = ({ type, placeholder, value, onChange, icon }) => {
     <div className="input-group rounded">
       {icon && (
         <span className="input-group-text">
-          <i className={`bi bi-${icon}`}></i>
+          <i className={`bi bi-${icon} text-primary`}></i>
         </span>
       )}
       <input
