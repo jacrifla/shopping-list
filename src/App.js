@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Items from './pages/Items';
+import Metrics from './pages/Metrics';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/profile' element={<Profile />} />
         <Route path="/home" element={<Home />}/>
         <Route path="/items" element={<Items />}/>
+        <Route path="/metrics" element={<Metrics />}/>
       </Routes>
     </Router>
   );
