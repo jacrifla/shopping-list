@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
+import Items from './pages/Items';
 
 function App() {
   return (
@@ -14,8 +15,8 @@ function App() {
         <Route path='/forgot-password' element={<ForgotPassword />} />
         {/* Rotas que precisam que o usuario esteja conectado */}
         <Route path='/profile' element={<Profile />} />
-        <Route path="/home" element={<Home />}
-        />
+        <Route path="/home" element={<Home />}/>
+        <Route path="/items" element={<Items />}/>
       </Routes>
     </Router>
   );

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Button = ({ children, onClick, className, icon }) => {
   return (
     <button
-      className={`btn ${className} rounded-pill`}
+      className={`btn ${className} rounded-pill fs-8`}
       onClick={onClick}
     >
       {icon && <i className={`bi bi-${icon} me-2`}></i>}

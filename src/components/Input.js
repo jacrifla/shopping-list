@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Input = ({ type = 'text', placeholder = '', value, onChange, icon = null, readOnly = false }) => {
+  if (!onChange) {
+    console.error('onChange is required for the Input component');
+  }
+
   return (
     <div className="input-group rounded">
       {icon && (
