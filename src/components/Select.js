@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Select = ({ label, value, onChange, options, icon, placeholder, ...props }) => {
+const Select = ({ label, value, onChange, options, icon, placeholder, keyField, displayField, ...props }) => {
   return (
     <div className="mb-3">
       {label && <label htmlFor={label} className="form-label">{label}</label>}
@@ -19,8 +19,8 @@ const Select = ({ label, value, onChange, options, icon, placeholder, ...props }
         >
           <option value="" disabled>{placeholder}</option>
           {options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.name}
+            <option key={option[keyField]} value={option[keyField]}>
+              {option[displayField]}
             </option>
           ))}
         </select>
