@@ -10,6 +10,45 @@ $light: #fff6ed;
 $accent1: #ffb6a3;
 $accent2: #b4d6bc;
 
+.bg-light-custom {
+  background-color: $light !important;
+}
+
+.bg-white{
+  background-color: white !important;
+}
+
+.text-primary {
+  color: $primary !important;
+}
+
+.border-primary {
+  border-color: $primary !important;
+}
+
+.text-danger{
+  color: $danger !important;
+}
+
+.text-secondary {
+  color: $secondary !important;
+}
+
+.line {
+  border-top: 0.5px solid $primary;
+  border-left: 0.5px solid $primary;
+  border-right: 0.5px solid $primary;
+}
+
+.fs-9 {
+  font-size: 0.695rem;
+}
+
+.fs-8 {
+  font-size: 0.775rem;
+}
+
+
 .bg-primary {
   background-color: $primary !important;
 }
@@ -78,8 +117,4 @@ body {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 1rem;
-}
-
-.container-fluid {
-  padding: 0;
 }
