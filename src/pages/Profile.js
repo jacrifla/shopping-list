@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from '../components/Title';
 import Button from '../components/Button';
@@ -6,29 +6,62 @@ import Input from '../components/Input';
 import Subtitle from '../components/Subtitle';
 import ConfirmModal from '../components/ConfirmModal';
 import Header from '../components/Header';
+import { clearAuth } from '../services/authService';
+import { deleteUser, updateUser } from '../services/userService';
+import ToastNotification from '../components/ToastNotification';
 
 const Profile = () => {
-  const [email, setEmail] = useState('usuario@example.com');
-  const [name, setName] = useState('Nome do Usuário');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [userId, setUserId] = useState('');
   const [token, setToken] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('danger');
   const navigate = useNavigate();
 
-  const handleUpdateProfile = () => {
-    console.log('Atualizar perfil:', { email, name });
-    // Lógica de atualização de perfil
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setEmail(user.email);
+      setName(user.name);
+      setUserId(user.user_id);
+    }
+  }, [])
+
+  const handleUpdateProfile = async () => {
+    try {
+      await updateUser(userId, name, email);
+      setToastMessage('Alterado com sucesso!');
+      setToastType('success');
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage(error.message || 'Erro ao alterar dados do usuário');
+      setToastType('danger');
+      setShowToast(true);
+    }
   };
 
   const handleChangePassword = () => {
     navigate('/forgot-password');
   };
 
-  const handleDeleteAccount = () => {
-    if (window.confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
-      console.log('Conta excluída');
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(userId);
+      setToastMessage('Conta excluída com sucesso!');
+      setToastType('success');
+      setShowToast(true);
+      clearAuth();
+      setTimeout(() => navigate('/'), 3000);
+    } catch (error) {
+      setToastMessage(error.message || 'Erro ao excluir a conta');
+      setToastType('danger');
+      setShowToast(true);
+    } finally {
       setShowConfirmModal(false);
-      // Lógica para excluir a conta
     }
   };
 
@@ -39,9 +72,9 @@ const Profile = () => {
 
   const handleLogout = () => {
     console.log('Usuário saiu');
-    // Lógica para deslogar o usuário, como redirecionar ou limpar o estado
+    clearAuth();
     setShowLogoutModal(false);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -49,6 +82,12 @@ const Profile = () => {
       <Header />
       <div className="container py-4 d-flex flex-column h-100">
         <div className="d-flex justify-content-between align-items-center mb-4">
+          <ToastNotification
+            message={toastMessage}
+            type={toastType}
+            show={showToast}
+            onClose={() => setShowToast(false)}
+          />
           <Title icon={'person-fill'}>Perfil</Title>
           <Button
             icon={'box-arrow-right'}

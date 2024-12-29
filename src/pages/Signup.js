@@ -3,31 +3,48 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Title from '../components/Title';
 import { useNavigate } from 'react-router-dom';
+import { createUser } from '../services/userService';
+import ToastNotification from '../components/ToastNotification';
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('danger');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
-      setError('Por favor, preencha todos os campos!');
+      setToastMessage('Por favor, preencha todos os campos!');
+      setToastType('danger');
+      setShowToast(true);
       return;
     }
 
+    
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem!');
+      setToastMessage('As senhas não coincidem!');
+      setToastType('danger');
+      setShowToast(true);
       return;
     }
-
-    console.log(`Nome: ${name}, Email: ${email}, Senha: ${password}`);
-
-    navigate('/');
+    
+    try {
+      await createUser(name, email, password);
+      setToastMessage('Usuário cadastrado com sucesso!');
+      setToastType('success');
+      setShowToast(true);
+      setTimeout(() => navigate('/'), 3000);
+    } catch (error) {
+      setToastMessage(error.message || 'Erro ao cadastrar o usuário');
+      setToastType('danger');
+      setShowToast(true);
+    }
   };
 
   return (
@@ -37,7 +54,14 @@ const Signup = () => {
           <div className="text-center mt-5 mb-4 flex-grow-1">
             <Title className="title-login-signup">Cadastro</Title>
           </div>
-          {error && <div className="alert alert-danger text-center">{error}</div>}
+
+          <ToastNotification 
+            message={toastMessage} 
+            type={toastType} 
+            show={showToast} 
+            onClose={() => setShowToast(false)} 
+          />
+
           <form onSubmit={handleSubmit} className="mt-4">
             <div className="mb-3">
               <Input

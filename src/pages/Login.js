@@ -3,6 +3,8 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Title from '../components/Title';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../services/userService';
+import { saveAuthToken } from '../services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -18,9 +20,16 @@ const Login = () => {
       return;
     }
 
-    console.log(`Email: ${email}, Password: ${password}`);
+    try {
+      const response = await login(email, password);
 
-    navigate('/home');
+      saveAuthToken(response.token, response.user)
+      
+      navigate('/home');
+
+    } catch (error) {
+      setError(error.message || 'Erro ao fazer login');
+    }
   };
 
   return (

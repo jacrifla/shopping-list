@@ -1,44 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from './Input';
 import Button from './Button';
 import Select from './Select';
 import Subtitle from './Subtitle';
 
-const BrandForm = ({ brands, setBrands }) => {
+const BrandForm = ({ handleDeleteBrand, handleSaveOrUpdateBrand, brands, setBrands }) => {
   const [brandName, setBrandName] = useState('');
-  const [editBrandId, setEditBrandId] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
 
-  const handleSaveBrand = () => {
-    if (editBrandId) {
-      setBrands(brands.map(brand =>
-        brand.id === parseInt(editBrandId, 10) ? { ...brand, name: brandName } : brand
-      ));
+  useEffect(() => {
+    if (selectedBrand) {
+      const brandToEdit = brands.find(brand => brand.brand_id === selectedBrand);
+      if (brandToEdit) {
+        setBrandName(brandToEdit.brand_name);
+      }
+    }
+  }, [selectedBrand, brands]);
+
+  const handleBrandSubmit = () => {
+    if (selectedBrand) {
+      handleSaveOrUpdateBrand(selectedBrand, brandName);
     } else {
-      const newBrand = { id: brands.length + 1, name: brandName };
-      setBrands([...brands, newBrand]);
+      handleSaveOrUpdateBrand(null, brandName);
     }
     setBrandName('');
-    setEditBrandId('');
+    setSelectedBrand('');
   };
 
-  const handleEditBrand = () => {
-    const brand = brands.find(brand => brand.id === parseInt(selectedBrand, 10));
-    if (brand) {
-      setBrandName(brand.name);
-      setEditBrandId(brand.id);
-    }
-  };
-
-  const handleDeleteBrand = () => {
-    setBrands(brands.filter(brand => brand.id !== parseInt(selectedBrand, 10)));
+  const handleBrandDelete = () => {
+    handleDeleteBrand(selectedBrand);
+    setBrandName('');
     setSelectedBrand('');
   };
 
   return (
     <div className="card shadow-sm mb-4 border-0">
       <div className="card-body">
-        <Subtitle icon={'plus-circle-fill'}>Cadastrar Marca</Subtitle>
+        <Subtitle icon={'plus-circle-fill'}>Cadastrar/Editar Marca</Subtitle>
         <div className='mb-3'>
           <Input
             value={brandName}
@@ -46,35 +44,29 @@ const BrandForm = ({ brands, setBrands }) => {
             placeholder="Nome da Marca"
           />
         </div>
-        <Button onClick={handleSaveBrand} className="btn btn-primary">
-          {editBrandId ? 'Editar Marca' : 'Cadastrar Marca'}
-        </Button>
+        <div className='d-flex flex-row justify-content-between'>
+          <Button onClick={handleBrandSubmit} className="btn btn-primary">
+            {selectedBrand ? 'Atualizar Marca' : 'Cadastrar Marca'}
+          </Button>
+          <Button onClick={handleBrandDelete} className="btn btn-danger" disabled={!selectedBrand}>
+            Excluir Marca
+          </Button>
+        </div>
 
         <div className="mt-4">
           <h6>Gerenciar Marcas</h6>
-          <Select 
-            value={selectedBrand}
-            onChange={(e) => setSelectedBrand(e.target.value)}
-            options={brands}
-            placeholder={'Selecione uma Marca'}
-          />
-
-          <div className="d-flex mt-3">
-            <Button
-              onClick={handleEditBrand}
-              className="btn btn-warning me-2"
-              disabled={!selectedBrand}
-            >
-              Editar
-            </Button>
-            <Button
-              onClick={handleDeleteBrand}
-              className="btn btn-danger"
-              disabled={!selectedBrand}
-            >
-              Excluir
-            </Button>
-          </div>
+          {brands.length > 0 ? (
+            <Select
+              value={selectedBrand}
+              onChange={(e) => setSelectedBrand(e.target.value)}
+              options={brands}
+              keyField="brand_id"
+              displayField="brand_name"
+              placeholder="Selecione uma Marca"
+            />
+          ) : (
+            <p>Carregando marcas...</p>
+          )}
         </div>
       </div>
     </div>

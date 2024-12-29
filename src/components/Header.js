@@ -11,26 +11,26 @@ const Header = () => {
         <nav>
           <ul className="nav flex-sm-nowrap">
             <li className="nav-item">
-              <Link to="/" className="nav-link text-white">
-                <i className="bi bi-house-door-fill me-2 me-sm-3"></i> {/* Alteração aqui */}
+              <Link to="/home" className="nav-link text-white">
+                <i className="bi bi-house-door-fill me-2 me-sm-3"></i>
                 <span className="d-none d-sm-inline">Home</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/profile" className="nav-link text-white">
-                <i className="bi bi-person-fill me-2 me-sm-3"></i> {/* Alteração aqui */}
+                <i className="bi bi-person-fill me-2 me-sm-3"></i>
                 <span className="d-none d-sm-inline">Perfil</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/metrics" className="nav-link text-white">
-                <i className="bi bi-graph-up me-2 me-sm-3"></i> {/* Alteração aqui */}
+                <i className="bi bi-graph-up me-2 me-sm-3"></i>
                 <span className="d-none d-sm-inline">Métricas</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/items" className="nav-link text-white">
-                <i className="bi bi-box me-2 me-sm-3"></i> {/* Alteração aqui */}
+                <i className="bi bi-box me-2 me-sm-3"></i>
                 <span className="d-none d-sm-inline">Itens</span>
               </Link>
             </li>

@@ -18,11 +18,14 @@ const Select = ({ label, value, onChange, options, icon, placeholder, keyField, 
           {...props}
         >
           <option value="" disabled>{placeholder}</option>
-          {options.map((option) => (
-            <option key={option[keyField]} value={option[keyField]}>
-              {option[displayField]}
-            </option>
-          ))}
+          {options.map((option, index) => {
+            return (
+              <option key={option[keyField]} value={option[keyField]}>
+                {option[displayField]}
+              </option>
+            );
+          })}
+
         </select>
       </div>
     </div>

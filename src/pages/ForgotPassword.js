@@ -3,32 +3,46 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Title from '../components/Title';
 import { useNavigate } from 'react-router-dom';
+import { resetPassword } from '../services/userService';
+import ToastNotification from '../components/ToastNotification'; 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);  // Controle de visibilidade do toast
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('danger');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !newPassword || !confirmPassword) {
-      setError('Por favor, preencha todos os campos!');
+      setToastMessage('Por favor, preencha todos os campos!');
+      setToastType('danger');
+      setShowToast(true);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('As senhas não coincidem!');
+      setToastMessage('As senhas não coincidem!');
+      setToastType('danger');
+      setShowToast(true);
       return;
     }
 
-    console.log(`E-mail: ${email}, Nova Senha: ${newPassword}`);
-
-    // Aqui você pode adicionar a lógica de recuperação de senha
-
-    navigate('/login');
+    try {
+      await resetPassword(email, newPassword);
+      setToastMessage('Senha alterada com sucesso!');
+      setToastType('success');
+      setShowToast(true);
+      setTimeout(() => navigate('/'), 3000);
+    } catch (error) {
+      setToastMessage(error.message || 'Erro ao cadastrar o usuário');
+      setToastType('danger');
+      setShowToast(true);
+    }
   };
 
   return (
@@ -38,7 +52,12 @@ const ForgotPassword = () => {
           <div className="text-center mt-5 mb-4">
             <Title className="title-login-signup">Recuperar Senha</Title>
           </div>
-          {error && <div className="alert alert-danger text-center">{error}</div>}
+          <ToastNotification 
+            message={toastMessage} 
+            type={toastType} 
+            show={showToast} 
+            onClose={() => setShowToast(false)} 
+          />
           <form onSubmit={handleSubmit} className="mt-4">
             <div className="mb-3">
               <Input

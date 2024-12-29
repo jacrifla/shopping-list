@@ -50,6 +50,8 @@ const ItemForm = ({
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(Number(e.target.value))}
                             options={categories}
+                            keyField="category_id"
+                            displayField="category_name"
                             placeholder="Selecione uma Categoria"
                         />
                     </div>
@@ -59,6 +61,8 @@ const ItemForm = ({
                             value={selectedBrand}
                             onChange={(e) => setSelectedBrand(Number(e.target.value))}
                             options={brands}
+                            keyField="brand_id"
+                            displayField="brand_name"
                             placeholder="Selecione uma Marca"
                         />
                     </div>
