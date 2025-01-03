@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from '../components/Title';
 import Button from '../components/Button';
-import Input from '../components/Input';
-import Subtitle from '../components/Subtitle';
-import ConfirmModal from '../components/ConfirmModal';
+import ToastNotification from '../components/ToastNotification';
 import Header from '../components/Header';
 import { clearAuth } from '../services/authService';
 import { deleteUser, updateUser } from '../services/userService';
-import ToastNotification from '../components/ToastNotification';
+import { findToken, grantAccess } from '../services/shareListAndToken';
+import UserInfo from '../components/Profile/UserInfo';
+import TokenManagement from '../components/Profile/TokenManagement';
+import DangerZone from '../components/Profile/DangerZone';
+import ConfirmModal from '../components/ConfirmModal';
 
 const Profile = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +31,7 @@ const Profile = () => {
       setName(user.name);
       setUserId(user.user_id);
     }
-  }, [])
+  }, []);
 
   const handleUpdateProfile = async () => {
     try {
@@ -65,9 +67,29 @@ const Profile = () => {
     }
   };
 
-  const handleTokenSubmit = () => {
-    console.log('Token submetido:', token);
-    // Lógica para gerenciar o compartilhamento
+  const handleTokenSubmit = async () => {
+    try {
+      const data = await findToken(token);
+
+      if (data && data.status) {
+        // Conceder acesso ao usuário
+        await grantAccess(token, userId);       
+  
+        setToastMessage('Acesso concedido à lista!');
+        setToastType('success');
+        setToken('');
+      } else {
+        // Token inválido
+        setToastMessage('Token inválido!');
+        setToastType('danger');
+      }
+  
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage('Erro ao validar o token');
+      setToastType('danger');
+      setShowToast(true);
+    }
   };
 
   const handleLogout = () => {
@@ -98,84 +120,23 @@ const Profile = () => {
           </Button>
         </div>
 
-        {/* Informações do Usuário e Gerenciamento de Compartilhamento */}
         <div className="row flex-grow-1">
-          <div className="col-lg-6 mb-4">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <Subtitle icon={'person-circle'}>Informações do Usuário</Subtitle>
-                <div className="mb-3">
-                  <Input
-                    icon={'person'}
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Nome"
-                    label="Nome"
-                  />
-                </div>
-                <div className="mb-3">
-                  <Input
-                    icon={'envelope'}
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    label="Email"
-                  />
-                </div>
-                <div className="d-flex gap-2">
-                  <Button className="btn btn-primary" icon={'floppy-fill'} onClick={handleUpdateProfile}>
-                    Atualizar Informações
-                  </Button>
-                  <Button className="btn btn-primary" icon={'lock-fill'} onClick={handleChangePassword}>
-                    Alterar Senha
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-6 mb-4">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h5 className="card-title">Gerenciamento de Compartilhamento</h5>
-                <div className="mb-3">
-                  <Input
-                    icon={'key-fill'}
-                    type="text"
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    placeholder="Cole o token aqui"
-                    label="Token de Compartilhamento"
-                  />
-                </div>
-                <Button className="btn btn-primary" onClick={handleTokenSubmit}>
-                  Submeter Token
-                </Button>
-              </div>
-            </div>
-          </div>
+          <UserInfo 
+            name={name} 
+            email={email} 
+            setName={setName} 
+            setEmail={setEmail} 
+            handleUpdateProfile={handleUpdateProfile} 
+            handleChangePassword={handleChangePassword} 
+          />
+          <TokenManagement 
+            token={token} 
+            setToken={setToken} 
+            handleTokenSubmit={handleTokenSubmit} 
+          />
         </div>
 
-        {/* Zona de Perigo */}
-        <div className="row mt-auto">
-          <div className="col-12">
-            <div className="card shadow-sm">
-              <div className="card-body">
-                <Subtitle className='text-danger' icon={'exclamation-circle-fill'}>Zona de Perigo</Subtitle>
-                <p className="text-warning fw-bold">Cuidado! Ações que requerem atenção especial</p>
-                <Button
-                  className="btn btn-danger"
-                  icon={'person-x'}
-                  onClick={() => setShowConfirmModal(true)}
-                >
-                  Excluir Conta
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DangerZone setShowConfirmModal={setShowConfirmModal} />
 
         {/* Modal de Confirmação de Exclusão de Conta */}
         <ConfirmModal

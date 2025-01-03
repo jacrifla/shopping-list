@@ -3,8 +3,6 @@ import Button from './Button';
 import Input from './Input';
 
 const ShareModal = ({ showModal, onClose, token, listName }) => {
-  console.log('List Name in Modal:', listName);
-  
   if (!showModal) return null;
 
   const handleSendToWhatsApp = () => {
