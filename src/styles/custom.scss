@@ -118,3 +118,12 @@ body {
   font-weight: bold;
   margin-bottom: 1rem;
 }
+
+.no-focus-border:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.placeholder-dark::placeholder {
+  color: $dark !important;
+}
