@@ -33,18 +33,16 @@ const EditModal = ({ list, onClose, onSave }) => {
                 <Button
                 className='btn btn-warning flex-fill'
                 onClick={onClose}
-                >
-                    Cancelar
-                </Button>
+                text={'Cancelar'}
+                />
 
             </div>
             <div className='d-flex flex-fill'>
                 <Button
                 className='btn btn-primary flex-fill'
                 onClick={handleSave}
-                >
-                    Savar
-                </Button>
+                text={'Salvar'}
+                />
             </div>
           </div>
         </div>

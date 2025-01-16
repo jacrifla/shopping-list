@@ -59,9 +59,11 @@ const Login = () => {
                 icon="lock"
               />
             </div>
-            <Button className="btn btn-primary w-100" type="submit">
-              Entrar
-            </Button>
+            <Button 
+              className="btn btn-primary w-100" 
+              type="submit"
+              text='Entrar
+            '/>
           </form>
           <div className="text-center mt-3">
             <p>

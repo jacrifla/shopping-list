@@ -99,9 +99,11 @@ const Signup = () => {
                 icon="lock"
               />
             </div>
-            <Button className="btn btn-primary w-100" type="submit">
-              Cadastrar
-            </Button>
+            <Button
+              className="btn btn-primary w-100"
+              type="submit" 
+              text="Cadastrar"
+            />
           </form>
           <div className="text-center mt-3">
             <p>Já tem uma conta? <a href="/">Faça login</a></p>

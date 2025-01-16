@@ -56,16 +56,14 @@ const ShareModal = ({ showModal, onClose, token, listName }) => {
                   className="btn btn-outline-secondary rounded"
                   icon="clipboard"
                   onClick={() => navigator.clipboard.writeText(token)}
-                >
-                  Copiar
-                </Button>
+                  text={'Copiar'}
+                />
                 <Button
                   className="btn btn-success rounded"
                   icon="whatsapp"
                   onClick={handleSendToWhatsApp}
-                >
-                  Enviar
-                </Button>
+                  text={'Enviar'}
+                />
               </div>
             </div>
           </div>

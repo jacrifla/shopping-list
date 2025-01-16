@@ -86,9 +86,11 @@ const ForgotPassword = () => {
                 icon="lock"
               />
             </div>
-            <Button className="btn btn-primary w-100" type="submit">
-              Recuperar Senha
-            </Button>
+            <Button 
+              className="btn btn-primary w-100" 
+              type="submit"
+              text="Recuperar Senha"
+            />
           </form>
         </div>
       </div>
