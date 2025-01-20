@@ -14,6 +14,11 @@ exports.formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
+exports.convertToDatabaseDateFormat = (dateString) => {
+  const [day, month, year] = dateString.split('/');
+  return `${year}-${month}-${day}`;
+};
+
 exports.formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 };
