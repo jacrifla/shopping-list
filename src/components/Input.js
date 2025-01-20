@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ type = 'text', placeholder = '', value, onChange, icon = null, readOnly = false }) => {
+const Input = ({ type = 'text', placeholder = '', value, onChange, onKeyDown, icon = null, readOnly = false, name = '', maxLength }) => {
+
   if (!onChange) {
-    console.error('onChange is required for the Input component');
+    console.error('Precisa passar o onChange');
   }
 
   return (
@@ -20,6 +21,9 @@ const Input = ({ type = 'text', placeholder = '', value, onChange, icon = null, 
         value={value}
         onChange={onChange}
         readOnly={readOnly}
+        name={name}
+        onKeyDown={onKeyDown}
+        maxLength={maxLength}
       />
     </div>
   );
@@ -30,8 +34,11 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
+  onKeyDown: PropTypes.func,
   icon: PropTypes.string,
   readOnly: PropTypes.bool,
+  name: PropTypes.string,
+  maxLength: PropTypes.number,
 };
 
 export default Input;
