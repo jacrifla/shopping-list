@@ -1,94 +1,98 @@
 import React from 'react';
+import Button from './Button';
 import Input from './Input';
 import Select from './Select';
-import Button from './Button';
 import Subtitle from './Subtitle';
 
 const ItemForm = ({
-    itemName, setItemName, barcode, setBarcode, description, setDescription,
-    selectedBrand, setSelectedBrand, selectedCategory, setSelectedCategory, brands, categories, onSaveItem, onDeleteItem
+    categories,
+    brands,
+    item,
+    isEditing,
+    handleSaveEditItem,
+    handleDeleteItem,
+    clearFields,
+    setItem
 }) => {
     return (
-        <div className="card shadow-sm mb-4 border-0">
+        <div className="card shadow-sm border-0">
             <div className="card-body">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <Subtitle icon={'plus-circle-fill'}>Cadastrar/Editar Item</Subtitle>
-                    <Button className="btn btn-danger" icon={'trash'} onClick={onDeleteItem}>
-                        Excluir Item
-                    </Button>
+                <div className="d-flex justify-content-between mb-3">
+                    <Subtitle
+                        icon={'plus-circle-fill'}
+                        text={isEditing ? 'Editar Item' : 'Cadastrar Item'}
+                    />
+                    <div>
+                        <Button
+                            className={'btn btn-secondary'}
+                            icon={'x-lg'}
+                            onClick={clearFields}
+                        />
+                        <Button
+                            className={'btn btn-danger ms-2'}
+                            icon={'trash-fill'}
+                            onClick={() => handleDeleteItem(item.itemId)}
+                        />
+                    </div>
                 </div>
-
-                {/* Linha para Nome do Produto e Código de Barras */}
+                {/* Nome do Produto e Codigo de Barras */}
                 <div className="row g-3 mb-3">
                     <div className="col-md-6 col-12">
                         <Input
                             icon={'box'}
                             type="text"
-                            value={itemName}
-                            onChange={(e) => setItemName(e.target.value)}
                             placeholder="Nome do Produto"
+                            value={item.itemName || ''}
+                            onChange={(e) => setItem({ ...item, itemName: e.target.value })}
                             label="Nome do Produto"
                         />
                     </div>
                     <div className="col-md-6 col-12">
                         <Input
                             icon={'upc'}
-                            type="text"
-                            value={barcode}
-                            onChange={(e) => setBarcode(e.target.value)}
+                            type="number"
+                            value={item.barcode || ''}
+                            onChange={(e) => setItem({ ...item, barcode: e.target.value })}
                             placeholder="Código de Barras"
+                            maxLength={13}
                             label="Código de Barras"
                         />
                     </div>
                 </div>
-
-                {/* Linha para Marca e Categoria */}
+                {/* Marca e Categorias */}
                 <div className="row">
                     <div className="col-md-6 col-12">
                         <Select
                             icon={'folder'}
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                            value={item.categoryId || ''} 
+                            onChange={(e) => setItem({ ...item, categoryId: e.target.value })}
                             options={categories}
-                            keyField="category_id"
-                            displayField="category_name"
-                            placeholder="Selecione uma Categoria"
+                            keyField={'categoryId'}
+                            displayField={'categoryName'}
+                            placeholder="Selecione uma categoria"
                         />
                     </div>
                     <div className="col-md-6 col-12">
                         <Select
                             icon={'tag'}
-                            value={selectedBrand}
-                            onChange={(e) => setSelectedBrand(Number(e.target.value))}
+                            value={item.brandId || ''}
+                            onChange={(e) => setItem({ ...item, brandId: e.target.value })}
                             options={brands}
-                            keyField="brand_id"
-                            displayField="brand_name"
+                            keyField={'brandId'}
+                            displayField={'brandName'}
                             placeholder="Selecione uma Marca"
                         />
                     </div>
-                </div>
 
-                {/* Linha para Observação e Botão Salvar */}
-                <div className="row g-3">
-                    <div className="col-12 col-lg-8">
-                        <Input
-                            icon={'sticky'}
-                            type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Observação"
-                            label="Observação"
-                        />
-                    </div>
-                    <div className="col-12 col-lg-4 d-flex align-items-end">
-                        <Button className="btn btn-primary w-100" icon={'save'} onClick={onSaveItem}>
-                            Salvar Item
-                        </Button>
-                    </div>
                 </div>
+                <Button
+                    className={'btn btn-primary w-100'}
+                    icon={'floppy-fill'}
+                    text={isEditing ? 'Atualizar' : 'Salvar'}
+                    onClick={handleSaveEditItem}
+                />
             </div>
         </div>
-
     );
 };
 
