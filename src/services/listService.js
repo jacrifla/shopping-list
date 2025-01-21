@@ -1,11 +1,11 @@
 
 import { URL_BASE } from "../utils/base";
 
-const API_URL = `${URL_BASE}/shopping-list`;
+const API_URL = `${URL_BASE}/list`;
 
 export const createList = async (userId, listName) => {
     try {
-        const response = await fetch(`${API_URL}`, {
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export const createList = async (userId, listName) => {
 
 export const getAllLists = async () => {
     try {
-        const response = await fetch(`${API_URL}/all`);
+        const response = await fetch(`${API_URL}/find-all`);
         const responseData = await response.json();
 
         if (!response.ok) {
@@ -45,12 +45,9 @@ export const getAllLists = async () => {
 export const getListsByUserId = async (userId) => {
     
     try {
-        const response = await fetch(`${API_URL}/list/${userId}`);
-        console.log(response);
+        const response = await fetch(`${API_URL}/${userId}`);
         
-        const responseData = await response.json();
-        console.log(responseData);
-        
+        const responseData = await response.json();        
 
         if (!response.ok) {
             throw new Error(responseData.message || 'Erro ao listar as listas do usuário');
@@ -86,22 +83,39 @@ export const updateList = async (listId, listName) => {
     }
 };
 
-export const markListAsCompleted = async (listId) => {
+export const markListAsCompleted = async (listId, items) => {
+    const sanitizedItems = items.map((item) => ({
+        ...item,
+        unitPrice: item.unitPrice ?? 0,
+    }));
+
+    const totalAmount = sanitizedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     try {
         const response = await fetch(`${API_URL}/mark/${listId}`, {
             method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ totalAmount }),
         });
 
-        const responseData = await response.json();
+        const result = await response.json();
         
-        if (!response.ok) {
-            throw new Error(responseData.message || 'Erro ao marcar lista como concluída');
+        if (result.status) {
+            return {
+                success: true,
+                message: `Lista marcada como concluída! Total gasto: R$ ${totalAmount.toFixed(2)}`,
+            };
+        } else {
+            return {
+                success: false,
+                message: result.message || 'Erro ao marcar a lista como concluída.',
+            };
         }
-
-        return responseData.data;
     } catch (error) {
-        console.error('Erro ao marcar lista como concluída:', error);
-        throw error;
+        console.error('Erro ao marcar como concluído:', error);
+        return {
+            success: false,
+            message: 'Erro ao marcar a lista como concluída. Tente novamente mais tarde.',
+        };
     }
 };
 
