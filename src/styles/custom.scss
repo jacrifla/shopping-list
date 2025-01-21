@@ -13,6 +13,10 @@ $accent2: #b4d6bc;
 .bg-light-custom {
   background-color: $light !important;
 }
+.btn-accent {
+  background-color: #8094FF;
+  color: $light;
+}
 
 .bg-white{
   background-color: white !important;
@@ -108,7 +112,11 @@ body {
   box-shadow: 0 0 0 0.2rem rgba($primary, 0.25) !important;
 }
 
-::placeholder {
+input::placeholder {
+  color: $primary !important;
+}
+
+input.text-primary {
   color: $primary !important;
 }
 
@@ -124,6 +132,6 @@ body {
   box-shadow: none !important;
 }
 
-.placeholder-dark::placeholder {
-  color: $dark !important;
+.pr-2 {
+  padding-right: 0.25rem;
 }
