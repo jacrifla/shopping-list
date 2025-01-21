@@ -19,18 +19,20 @@ const Items = () => {
         handleDeleteItem,
         setToast,
         clearFields,
-        setItem 
+        setItem
     } = useItems();
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
 
-    const handleConfirmDelete = () => {
-        handleDeleteItem(itemToDelete);
-        setShowConfirmModal(false);
+    const handleDeleteRequest = (itemId) => {
+        setItemToDelete(itemId);
+        setShowConfirmModal(true);
     };
 
-    const closeConfirmModal = () => {
+    const handleConfirmDelete = () => {
+        handleDeleteItem(itemToDelete);
+        setToast({ show: true, message: 'Item excluído com sucesso!', type: 'success' });
         setShowConfirmModal(false);
     };
 
@@ -38,6 +40,7 @@ const Items = () => {
         <div>
             <Header />
             <div className="container mt-3">
+                {/* Campo de busca */}
                 <div className="mb-3">
                     <SearchInput
                         items={allItems}
@@ -45,22 +48,20 @@ const Items = () => {
                     />
                 </div>
 
+                {/* Formulário de item */}
                 <ItemForm
                     item={item}
                     categories={categories}
                     brands={brands}
                     isEditing={isEditing}
                     handleSaveEditItem={handleSaveEditItem}
-                    handleDeleteItem={(itemId) => {
-                        console.log(itemId); 
-                        setItemToDelete(itemId);
-                        setShowConfirmModal(true);
-                    }}
+                    handleDeleteItem={handleDeleteRequest}
                     setToast={setToast}
                     clearFields={clearFields}
                     setItem={setItem}
                 />
 
+                {/* Notificação Toast */}
                 {toast.show && (
                     <ToastNotification
                         message={toast.message}
@@ -70,11 +71,12 @@ const Items = () => {
                     />
                 )}
 
+                {/* Modal de confirmação */}
                 <ConfirmModal
                     show={showConfirmModal}
-                    onClose={closeConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
                     onConfirm={handleConfirmDelete}
-                    message="Tem certeza de que deseja excluir este item?"
+                    message={`Tem certeza de que deseja excluir o item?`}
                 />
             </div>
         </div>
