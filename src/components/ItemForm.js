@@ -22,17 +22,19 @@ const ItemForm = ({
                         icon={'plus-circle-fill'}
                         text={isEditing ? 'Editar Item' : 'Cadastrar Item'}
                     />
-                    <div>
+                    <div className='d-flex gap-2'>
+                        <Button
+                            className={'btn btn-danger'}
+                            icon={'trash-fill'}
+                            onClick={() => handleDeleteItem(item.itemId)}
+                            text={'Excluir'}
+                        />
                         <Button
                             className={'btn btn-secondary'}
                             icon={'x-lg'}
-                            onClick={clearFields}
-                        />
-                        <Button
-                            className={'btn btn-danger ms-2'}
-                            icon={'trash-fill'}
-                            onClick={() => handleDeleteItem(item.itemId)}
-                        />
+                            onClick={() => clearFields('item')}
+                            text={'Cancelar'}
+                            />
                     </div>
                 </div>
                 {/* Nome do Produto e Codigo de Barras */}
@@ -64,7 +66,7 @@ const ItemForm = ({
                     <div className="col-md-6 col-12">
                         <Select
                             icon={'folder'}
-                            value={item.categoryId || ''} 
+                            value={item.categoryId || ''}
                             onChange={(e) => setItem({ ...item, categoryId: e.target.value })}
                             options={categories}
                             keyField={'categoryId'}
@@ -83,7 +85,6 @@ const ItemForm = ({
                             placeholder="Selecione uma Marca"
                         />
                     </div>
-
                 </div>
                 <Button
                     className={'btn btn-primary w-100'}
