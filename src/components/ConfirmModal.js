@@ -19,6 +19,7 @@ const ConfirmModal = ({ show, onClose, onConfirm, message }) => {
               className="btn btn-secondary w-100"
               onClick={onClose}
               text="Cancelar"
+              showText={true}
             />
             <Button
               className="btn btn-danger w-100"
@@ -27,6 +28,7 @@ const ConfirmModal = ({ show, onClose, onConfirm, message }) => {
                 onClose();
               }}
               text="Confirmar"
+              showText={true}
             />
           </div>
         </div>

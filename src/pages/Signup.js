@@ -52,7 +52,7 @@ const Signup = () => {
       <div className="row justify-content-center w-100">
         <div className="col-12 col-md-6 d-flex flex-column">
           <div className="text-center mt-5 mb-4 flex-grow-1">
-            <Title className="title-login-signup">Cadastro</Title>
+            <Title className="title-login-signup" text={'Cadastro'}/>
           </div>
 
           <ToastNotification 
@@ -103,6 +103,7 @@ const Signup = () => {
               className="btn btn-primary w-100"
               type="submit" 
               text="Cadastrar"
+              showText={true}
             />
           </form>
           <div className="text-center mt-3">

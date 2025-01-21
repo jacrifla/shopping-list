@@ -37,7 +37,7 @@ const Login = () => {
       <div className="row justify-content-center w-100">
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center">
           <div className="text-center mt-5 mb-4 flex-grow-1">
-            <Title className="title-login-signup">Fazer Login</Title>
+            <Title className="title-login-signup" text={'Fazer Login'}/>
           </div>
           {error && <div className="alert alert-danger text-center">{error}</div>}
           <form onSubmit={handleSubmit} className="mt-4">
@@ -62,8 +62,9 @@ const Login = () => {
             <Button 
               className="btn btn-primary w-100" 
               type="submit"
-              text='Entrar
-            '/>
+              text='Entrar'
+              showText={true}
+            />
           </form>
           <div className="text-center mt-3">
             <p>

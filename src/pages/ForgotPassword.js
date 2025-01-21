@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showToast, setShowToast] = useState(false);  // Controle de visibilidade do toast
+  const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('danger');
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
       <div className="row justify-content-center w-100">
         <div className="col-12 col-md-6">
           <div className="text-center mt-5 mb-4">
-            <Title className="title-login-signup">Recuperar Senha</Title>
+            <Title className="title-login-signup" text={'Recuperar Senha'}/>
           </div>
           <ToastNotification 
             message={toastMessage} 
@@ -90,6 +90,7 @@ const ForgotPassword = () => {
               className="btn btn-primary w-100" 
               type="submit"
               text="Recuperar Senha"
+              showText={true}
             />
           </form>
         </div>
