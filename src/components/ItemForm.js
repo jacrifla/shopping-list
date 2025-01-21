@@ -91,6 +91,7 @@ const ItemForm = ({
                     icon={'floppy-fill'}
                     text={isEditing ? 'Atualizar' : 'Salvar'}
                     onClick={handleSaveEditItem}
+                    showText={true}
                 />
             </div>
         </div>

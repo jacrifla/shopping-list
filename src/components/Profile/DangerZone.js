@@ -26,6 +26,7 @@ const DangerZone = ({ setShowConfirmModal }) => {
               icon={'person-x'}
               onClick={() => setShowConfirmModal(true)}
               text={'Excluir Conta'}
+              showText={true}
             />
           </div>
         </div>

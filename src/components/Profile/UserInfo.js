@@ -29,9 +29,9 @@ const UserInfo = ({ name, email, setName, setEmail, handleUpdateProfile, handleC
               label="Email"
             />
           </div>
-          <div className="d-flex gap-2">
-            <Button className="btn btn-primary" icon={'floppy-fill'} onClick={handleUpdateProfile} text={'Atualizar Informações'}/>
-            <Button className="btn btn-primary" icon={'lock-fill'} onClick={handleChangePassword} text={'Alterar Senha'}/>
+          <div className="d-flex gap-3">
+            <Button className="btn btn-primary w-100" icon={'floppy-fill'} onClick={handleUpdateProfile} text={'Atualizar Informações'} showText={true} />
+            <Button className="btn btn-primary w-100" icon={'lock-fill'} onClick={handleChangePassword} text={'Alterar Senha'} showText={true} />
           </div>
         </div>
       </div>

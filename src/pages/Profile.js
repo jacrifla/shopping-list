@@ -116,6 +116,7 @@ const Profile = () => {
             className="btn btn-danger"
             onClick={() => setShowLogoutModal(true)}
             text={'Sair'}
+            showText={true}
           />
         </div>
 

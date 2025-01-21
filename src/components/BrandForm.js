@@ -181,6 +181,7 @@ const BrandForm = () => {
                         text={selectedBrand ? "Atualizar" : "Salvar"}
                         onClick={handleAddBrand}
                         icon={'floppy-fill'}
+                        showText={true}
                     />
                 </div>
             </div>

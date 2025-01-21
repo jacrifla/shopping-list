@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Button = ({ text, onClick, className, icon }) => {
-  const hasText = text && typeof text === 'string' && text.trim() !== '';
-
+const Button = ({ text, onClick, className, icon, showText = false }) => {
   return (
     <button
       className={`btn ${className} rounded-pill fs-8`}
       onClick={onClick}
     >
-      {icon && hasText && <i className={`bi bi-${icon} me-2`}></i>}
-      {icon && !hasText && <i className={`bi bi-${icon}`}></i>}
-      {text && text}
+      {icon && <i className={`bi bi-${icon}`}></i>}
+      {text && showText && (
+        <span>
+          &nbsp;{text}
+        </span>
+      )}
     </button>
   );
 };
@@ -21,6 +22,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   icon: PropTypes.string,
+  showText: PropTypes.bool,
 };
 
 export default Button;

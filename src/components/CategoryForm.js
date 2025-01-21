@@ -181,6 +181,7 @@ const CategoryForm = () => {
                         text={selectedCategory ? "Atualizar" : "Salvar"}
                         onClick={handleAddCategory}
                         icon={'floppy-fill'}
+                        showText={true}
                     />
                 </div>
             </div>

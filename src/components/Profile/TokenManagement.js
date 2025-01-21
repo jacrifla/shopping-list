@@ -18,7 +18,7 @@ const TokenManagement = ({ token, setToken, handleTokenSubmit }) => {
               label="Token de Compartilhamento"
             />
           </div>
-          <Button className="btn btn-primary" onClick={handleTokenSubmit} text={'Submeter Token'}/>
+          <Button className="btn btn-primary" onClick={handleTokenSubmit} text={'Submeter Token'} showText={true}/>
         </div>
       </div>
     </div>
