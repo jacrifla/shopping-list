@@ -10,7 +10,7 @@ const CategoryService = {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ category_name: categoryName })
+                body: JSON.stringify({ categoryName })
             });
 
             const responseData = await response.json();
@@ -31,7 +31,7 @@ const CategoryService = {
                 method: 'GET',
             });
 
-            const responseData = await response.json();
+            const responseData = await response.json();            
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao buscar as categorias');
             }
@@ -49,7 +49,7 @@ const CategoryService = {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ category_name: categoryName })
+                body: JSON.stringify({ categoryName })
             });
 
             const responseData = await response.json();
