@@ -24,7 +24,6 @@ const useItems = () => {
             try {
                 const items = await itemsService.getAllItems();
                 setAllItems(items);
-                console.log("Itens carregados:", items);
             } catch (error) {
                 console.error('Erro ao buscar itens', error);
             }
@@ -34,7 +33,6 @@ const useItems = () => {
             try {
                 const response = await categoryService.findAllCategories();
                 setCategories(response);
-                console.log("Categorias carregadas:", response); 
             } catch (error) {
                 console.error(error.message);
             }
@@ -44,7 +42,6 @@ const useItems = () => {
             try {
                 const response = await brandService.findAllBrands();
                 setBrands(response);
-                console.log("Marcas carregadas:", response);
             } catch (error) {
                 console.error(error.message);
             }
