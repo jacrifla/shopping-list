@@ -6,9 +6,9 @@ import Subtitle from '../Subtitle';
 const UserInfo = ({ name, email, setName, setEmail, handleUpdateProfile, handleChangePassword }) => {
   return (
     <div className="col-lg-6 mb-4">
-      <div className="card shadow-sm h-100">
+      <div className="card shadow-sm h-100 border-0">
         <div className="card-body">
-          <Subtitle icon={'person-circle'}>Informações do Usuário</Subtitle>
+          <Subtitle icon={'file-person'} text={'Informações do Usuário'}/>
           <div className="mb-3">
             <Input
               icon={'person'}
@@ -30,12 +30,8 @@ const UserInfo = ({ name, email, setName, setEmail, handleUpdateProfile, handleC
             />
           </div>
           <div className="d-flex gap-2">
-            <Button className="btn btn-primary" icon={'floppy-fill'} onClick={handleUpdateProfile}>
-              Atualizar Informações
-            </Button>
-            <Button className="btn btn-primary" icon={'lock-fill'} onClick={handleChangePassword}>
-              Alterar Senha
-            </Button>
+            <Button className="btn btn-primary" icon={'floppy-fill'} onClick={handleUpdateProfile} text={'Atualizar Informações'}/>
+            <Button className="btn btn-primary" icon={'lock-fill'} onClick={handleChangePassword} text={'Alterar Senha'}/>
           </div>
         </div>
       </div>

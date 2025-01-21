@@ -110,14 +110,13 @@ const Profile = () => {
             show={showToast}
             onClose={() => setShowToast(false)}
           />
-          <Title icon={'person-fill'}>Perfil</Title>
+          <Title icon={'person-fill'} text={'Perfil'}/>
           <Button
             icon={'box-arrow-right'}
             className="btn btn-danger"
             onClick={() => setShowLogoutModal(true)}
-          >
-            Sair
-          </Button>
+            text={'Sair'}
+          />
         </div>
 
         <div className="row flex-grow-1">

@@ -5,7 +5,7 @@ import Button from '../Button';
 const TokenManagement = ({ token, setToken, handleTokenSubmit }) => {
   return (
     <div className="col-lg-6 mb-4">
-      <div className="card shadow-sm h-100">
+      <div className="card shadow-sm h-100 border-0">
         <div className="card-body">
           <h5 className="card-title">Gerenciamento de Compartilhamento</h5>
           <div className="mb-3">
@@ -18,9 +18,7 @@ const TokenManagement = ({ token, setToken, handleTokenSubmit }) => {
               label="Token de Compartilhamento"
             />
           </div>
-          <Button className="btn btn-primary" onClick={handleTokenSubmit}>
-            Submeter Token
-          </Button>
+          <Button className="btn btn-primary" onClick={handleTokenSubmit} text={'Submeter Token'}/>
         </div>
       </div>
     </div>
