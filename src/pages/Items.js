@@ -48,7 +48,7 @@ const Items = () => {
     return (
         <div>
             <Header />
-            <div className="container mt-3">
+            <div className="container mt-3 pb-5">
                 {/* Campo de busca */}
                 <div className="mb-3">
                     <SearchInput
