@@ -5,6 +5,8 @@ import useItems from '../hooks/useItems';
 import ItemForm from '../components/ItemForm';
 import ConfirmModal from '../components/ConfirmModal';
 import ToastNotification from '../components/ToastNotification';
+import CategoryForm from '../components/CategoryForm';
+import BrandForm from '../components/BrandForm';
 
 const Items = () => {
     const {
@@ -25,8 +27,15 @@ const Items = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
 
-    const handleDeleteRequest = (itemId) => {
-        setItemToDelete(itemId);
+    const handleDeleteRequest = () => {
+        if (!item || !item.itemId) {
+            // Se nenhum item for selecionado, exibe a notificação de erro
+            setToast({ show: true, message: 'Selecione um item antes de excluir!', type: 'danger' });
+            return;
+        }
+        
+        // Se um item estiver selecionado, continua com o processo de exclusão
+        setItemToDelete(item.itemId);
         setShowConfirmModal(true);
     };
 
@@ -60,6 +69,16 @@ const Items = () => {
                     clearFields={clearFields}
                     setItem={setItem}
                 />
+
+                {/* Layout para CategoryForm e BrandForm */}
+                <div className="row">
+                    <div className="col-12 col-lg-6 mb-3">
+                        <CategoryForm />
+                    </div>
+                    <div className="col-12 col-lg-6 mb-3">
+                        <BrandForm />
+                    </div>
+                </div>
 
                 {/* Notificação Toast */}
                 {toast.show && (
