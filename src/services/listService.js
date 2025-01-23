@@ -1,12 +1,16 @@
-
+import { getUserId } from '../services/authService'; // Importando a função para pegar o userId
 import { URL_BASE } from "../utils/base";
-import { getUserId } from "./authService";
-const API_URL = `${URL_BASE}/list`;
 
-const userId = getUserId();
+const API_URL = `${URL_BASE}/list`;
+const API_URL_SHARE_LIST = `${URL_BASE}/shared-list-tokens`;
 
 const List = {
-    createList: async (userId, listName) => {
+    createList: async (listName) => {
+        const userId = getUserId();
+        if (!userId) {
+            throw new Error('Usuário não autenticado');
+        }
+
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -15,13 +19,13 @@ const List = {
                 },
                 body: JSON.stringify({ userId, listName }),
             });
-    
+
             const responseData = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao criar lista');
             }
-            
+
             return responseData.data;
         } catch (error) {
             console.error('Erro ao criar lista:', error);
@@ -33,11 +37,11 @@ const List = {
         try {
             const response = await fetch(`${API_URL}/find-all`);
             const responseData = await response.json();
-    
+
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao listar listas');
             }
-    
+
             return responseData.data;
         } catch (error) {
             console.error('Erro ao listar listas:', error);
@@ -45,16 +49,21 @@ const List = {
         }
     },
 
-    getListsByUserId: async (userId) => {
+    getListsByUserId: async () => {
+        const userId = getUserId();
+        if (!userId) {
+            throw new Error('Usuário não autenticado');
+        }
+
         try {
             const response = await fetch(`${API_URL}/${userId}`);
-            
-            const responseData = await response.json();        
-    
+
+            const responseData = await response.json();
+
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao listar as listas do usuário');
             }
-    
+
             return responseData.data;
         } catch (error) {
             console.error('Erro ao listar as listas do usuário:', error);
@@ -71,13 +80,13 @@ const List = {
                 },
                 body: JSON.stringify({ listName }),
             });
-    
+
             const responseData = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao atualizar lista');
             }
-    
+
             return responseData.data;
         } catch (error) {
             console.error('Erro ao atualizar lista:', error);
@@ -85,39 +94,30 @@ const List = {
         }
     },
 
-    markAsCompleted: async (listId, items) => {
-        const sanitizedItems = items.map((item) => ({
-            ...item,
-            unitPrice: item.unitPrice ?? 0,
-        }));
-    
-        const totalAmount = sanitizedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+    markAsCompleted: async (listId, totalAmount) => {
+        if (!listId || totalAmount == null) {
+            throw new Error('ID da lista e o total da lista são obrigatórios');
+        }
+
         try {
             const response = await fetch(`${API_URL}/mark/${listId}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({ totalAmount }),
             });
-    
-            const result = await response.json();
-            
-            if (result.status) {
-                return {
-                    success: true,
-                    message: `Lista marcada como concluída! Total gasto: R$ ${totalAmount.toFixed(2)}`,
-                };
-            } else {
-                return {
-                    success: false,
-                    message: result.message || 'Erro ao marcar a lista como concluída.',
-                };
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao marcar como concluída');
             }
+
+            return data;
         } catch (error) {
-            console.error('Erro ao marcar como concluído:', error);
-            return {
-                success: false,
-                message: 'Erro ao marcar a lista como concluída. Tente novamente mais tarde.',
-            };
+            console.error('Erro ao marcar como concluída:', error.message);
+            throw error;
         }
     },
 
@@ -126,18 +126,69 @@ const List = {
             const response = await fetch(`${API_URL}/${listId}`, {
                 method: 'DELETE',
             });
-    
+
             const responseData = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(responseData.message || 'Erro ao excluir lista');
             }
-    
+
             return responseData.data;
         } catch (error) {
             console.error('Erro ao excluir lista:', error);
             throw error;
         }
     },
+
+    generateShareToken: async (listId) => {
+        try {
+            if (!listId) throw new Error("O ID da lista é obrigatório.");
+
+            const response = await fetch(`${API_URL_SHARE_LIST}/generate-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ listId }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Erro ao gerar token de compartilhamento.');
+            }
+
+            const data = await response.json();
+            return data.data; // Retorna o token e expiresAt
+        } catch (error) {
+            console.error('Erro em generateShareToken:', error);
+            throw error;
+        }
+    },
+
+    acceptShareToken: async (userId, token) => {
+        try {
+            if (!userId || !token) throw new Error("O ID do usuário e o token são obrigatórios.");
+
+            const response = await fetch(`${API_URL_SHARE_LIST}/accept-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, token }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Erro ao aceitar token de compartilhamento.');
+            }
+
+            const data = await response.json();
+            return data.data; // Retorna os dados da lista compartilhada
+        } catch (error) {
+            console.error('Erro em acceptShareToken:', error);
+            throw error;
+        }
+    },
 };
+
 export default List;
