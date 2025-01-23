@@ -6,7 +6,7 @@ const ShareModal = ({ showModal, onClose, token, listName }) => {
   if (!showModal) return null;
 
   const handleSendToWhatsApp = () => {
-    const message = `Estou compartilhando a lista: ${listName}\nToken: ${token}`;
+    const message = `${token}`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
   };
@@ -49,6 +49,7 @@ const ShareModal = ({ showModal, onClose, token, listName }) => {
                   readOnly
                   placeholder="Token de Compartilhamento"
                   icon="clipboard"
+                  onChange={()=>{}}
                 />
               </div>
               <div className="d-flex gap-2 mt-3">
@@ -57,12 +58,14 @@ const ShareModal = ({ showModal, onClose, token, listName }) => {
                   icon="clipboard"
                   onClick={() => navigator.clipboard.writeText(token)}
                   text={'Copiar'}
+                  showText={true}
                 />
                 <Button
                   className="btn btn-success rounded"
                   icon="whatsapp"
                   onClick={handleSendToWhatsApp}
                   text={'Enviar'}
+                  showText={true}
                 />
               </div>
             </div>

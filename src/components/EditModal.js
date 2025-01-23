@@ -1,54 +1,57 @@
 import React, { useState } from 'react';
-import Input from './Input';
+import Subtitle from './Subtitle';
 import Button from './Button';
-
-
-const EditModal = ({ list, onClose, onSave }) => {
-    const [newName, setNewName] = useState(list.list_name);
+import Input from './Input';
+const EditListModal = ({ showModal, onClose, listName, onSave }) => {
+  const [newListName, setNewListName] = useState(listName);
 
   const handleSave = () => {
-    if (newName.trim() !== '') {
-      onSave(list.list_id, newName);
+    if (newListName.trim() === '') {
+      alert('O nome da lista não pode estar vazio.');
+      return;
     }
+    onSave(newListName);
+    onClose();
   };
 
   return (
-    <div className={`modal ${list ? 'd-block' : 'd-none'}`} tabIndex="-1">
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header border-0">
-            <h5 className="modal-title">Editar Lista</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
-          </div>
-          <div className="modal-body">
-            <Input 
-                type="text"
-                className="form-control"
-                onChange={(e) => setNewName(e.target.value)}
-                value={newName}
+    <div
+      className={`modal ${showModal ? 'fade show' : ''}`}
+      tabIndex="-1"
+      style={{ display: showModal ? 'block' : 'none', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content border-0">
+          <div className='d-flex justify-content-between align-items-center p-3'>
+            <Subtitle text={'Editar Lista'} />
+            <Button
+              className={'btn-close fs-6'}
+              onClick={onClose}
             />
           </div>
-          <div className="modal-footer border-0 d-flex justify-content-between">
-            <div className='d-flex flex-fill'>
-                <Button
-                className='btn btn-warning flex-fill'
-                onClick={onClose}
-                text={'Cancelar'}
-                />
 
-            </div>
-            <div className='d-flex flex-fill'>
-                <Button
-                className='btn btn-primary flex-fill'
-                onClick={handleSave}
-                text={'Salvar'}
-                />
+          <div className="modal-body">
+            <Input
+              type="text"
+              className="form-control"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+              placeholder="Novo nome da lista"
+            />
+            <div className="d-flex justify-content-between gap-3 my-3">
+              <button type="button" className="btn btn-secondary w-100" onClick={onClose}>
+                Cancelar
+              </button>
+              <button type="button" className="btn btn-primary w-100" onClick={handleSave}>
+                Salvar
+              </button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
 };
 
-export default EditModal;
+export default EditListModal;
