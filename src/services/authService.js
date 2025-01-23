@@ -2,7 +2,7 @@
 export const saveAuthToken = (token, user) => {
     localStorage.setItem('authToken', token);
     localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('userId', JSON.stringify(user.user_id))
+    localStorage.setItem('userId', JSON.stringify(user.userId))
 };
 
 // Função para obter o token do localStorage
@@ -11,7 +11,7 @@ export const getAuthToken = () => {
 };
 
 export const getUserId = () => {    
-    return localStorage.getItem('user_id');
+    return localStorage.getItem('userId');
 };
 
 // Função para verificar se o usuário está autenticado
@@ -23,5 +23,5 @@ export const isAuthenticated = () => {
 export const clearAuth = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
-    localStorage.removeItem('user_id');
+    localStorage.removeItem('userId');
 };
