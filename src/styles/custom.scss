@@ -9,12 +9,48 @@ $dark: #4a4a4a;
 $light: #fff6ed;
 $accent1: #ffb6a3;
 $accent2: #b4d6bc;
+$accent3: #8094FF;
+$white: #fff;
 
 .bg-light-custom {
   background-color: $light !important;
 }
+
+.btn-outline-accent {
+  background-color: transparent;
+  color: $accent3;
+  border: 2px solid $accent3;
+}
+
+.btn-outline-accent:hover {
+  background-color: $accent3;
+  color: $white;
+}
+
+.btn-outline-danger {
+  background-color: transparent;
+  color: $danger;
+  border: 2px solid $danger;
+}
+
+.btn-outline-danger:hover {
+  background-color: $danger;
+  color: $white;
+}
+
+.btn-outline-success {
+  background-color: transparent;
+  color: $secondary;
+  border: 2px solid $secondary;
+}
+
+.btn-outline-success:hover {
+  background-color: $secondary;
+  color: #fff;
+}
+
 .btn-accent {
-  background-color: #8094FF;
+  background-color: $accent3;
   color: $light;
 }
 
@@ -36,6 +72,15 @@ $accent2: #b4d6bc;
 
 .text-secondary {
   color: $secondary !important;
+}
+
+.bg-light.text-muted {
+  background-color: $secondary !important;
+  opacity: 0.8;
+}
+
+.text-muted .card-title {
+  text-decoration: line-through !important;
 }
 
 .line {
