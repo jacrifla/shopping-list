@@ -1,40 +1,31 @@
+// src/pages/Home.js
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import ListCard from '../components/ListCard';
-import Subtitle from '../components/Subtitle';
-import ConfirmModal from '../components/ConfirmModal';
+import Sidebar from '../components/Sidebar';
 import CreateListForm from '../components/CreateListForm';
+import EditListModal from '../components/EditModal';
 import ShareModal from '../components/ShareModal';
+import ConfirmModal from '../components/ConfirmModal';
+import ToastNotification from '../components/ToastNotification';
 import listService from '../services/listService';
 import { getUserId } from '../services/authService';
-import Button from '../components/Button';
-import ToastNotification from '../components/ToastNotification';
-import EditListModal from '../components/EditModal';
 
 const Home = () => {
   const [lists, setLists] = useState([]);
-  const [showLists, setShowLists] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
-  const [listToDelete, setListToDelete] = useState(null);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newListName, setNewListName] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [listNameToEdit, setListNameToEdit] = useState('');
+  const [listIdToEdit, setListIdToEdit] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareToken, setShareToken] = useState('');
-  const [listToShare, setListToShare] = useState(null);
+  const [listToShare, setListToShare] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [listToDelete, setListToDelete] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
   const [showToast, setShowToast] = useState(false);
-  const [listNameToEdit, setListNameToEdit] = useState('');
-  const [listIdToEdit, setListIdToEdit] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
-
-
-  const showToastNotification = (message, type) => {
-    setToastMessage(message);
-    setToastType(type);
-    setShowToast(true);
-  };
 
   useEffect(() => {
     const getLists = async () => {
@@ -49,7 +40,11 @@ const Home = () => {
     getLists();
   }, []);
 
-  const toggleLists = () => setShowLists(!showLists);
+  const showToastNotification = (message, type) => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+  };
 
   const handleCreateList = async () => {
     try {
@@ -116,62 +111,56 @@ const Home = () => {
     }
   };
 
-
   const handleSelectList = (listId) => {
     setSelectedList(listId);
   };
 
-  const onMarkAsBought = (itemId) => {
-    console.log(`Marcar item ${itemId} como comprado`);
-  };
+  const markAsBought = async (listId) => {
+    try {
+        const totalAmount = 100; // Substitua pelo valor real do total da lista
+        const result = await listService.markAsCompleted(listId, totalAmount);
 
+        if (result.status) {
+            setLists(lists.map((list) =>
+                list.listId === listId
+                    ? {
+                          ...list,
+                          completedAt: result.data.completedAt,
+                          totalAmount: result.data.totalAmount,
+                      }
+                    : list
+            ));
+            showToastNotification('Lista marcada como concluída!', 'success');
+        } else {
+            showToastNotification('Não foi possível marcar a lista como concluída.', 'danger');
+        }
+    } catch (error) {
+        console.error('Erro ao marcar a lista como concluída:', error.message);
+        showToastNotification(`Erro: ${error.message}`, 'danger');
+    }
+};
+
+  
   return (
     <div>
       <Header />
       <div className="container mt-4">
         <div className="row">
-          <div className="col-lg-3">
-            <button
-              className="btn btn-secondary w-100 d-lg-none mb-3"
-              onClick={toggleLists}
-            >
-              {showLists ? 'Esconder Listas' : 'Mostrar Listas'}
-            </button>
-            <div className={`d-lg-block ${showLists ? '' : 'd-none'} bg-white rounded-3 p-3`} style={{ overflowY: 'auto', maxHeight: '100vh' }}>
-              <div className="d-flex flex-column align-items-stretch gap-3">
-                <Subtitle icon={'list'} text={'Minhas Listas'} />
-                {lists.length > 0 ? (
-                  lists.map((list) => (
-                    <ListCard
-                      key={list.listId}
-                      listName={list.listName}
-                      createdAt={list.createdAt}
-                      onClick={() => handleSelectList(list.listId)}
-                      onMarkAsBought={onMarkAsBought}
-                      onEdit={() => handleEdit(list.listId, list.listName)}  // Passa o id e nome da lista
-                      onDelete={() => handleDelete(list.listId)}
-                      onShare={() => handleShare(list.listId)}
-                    />
-                  ))
-                ) : (
-                  <p>Nenhuma lista encontrada.</p>
-                )}
-              </div>
-              <div className="text-center mt-4">
-                <Button
-                  className="btn btn-primary w-100"
-                  onClick={() => setShowCreateForm(true)}
-                  icon={'plus-lg'}
-                  text={'Criar Nova Lista'}
-                  showText={true}
-                />
-              </div>
-            </div>
+          <div className="col-lg-3 mb-5 mb-lg-0">
+            <Sidebar
+              lists={lists}
+              onSelectList={handleSelectList}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onShare={handleShare}
+              onCreateNewList={() => setShowCreateForm(true)}
+              onMarkAsBought={(listId) => markAsBought(listId)}
+            />
           </div>
 
           <div className="col-lg-9">
-            <div className='card bg-light-custom border-0'>
-              <div className='card-body text-center'>
+            <div className="card bg-light-custom border-0">
+              <div className="card-body text-center">
                 {selectedList ? (
                   <p>Itens da lista {selectedList}:</p>
                 ) : (
@@ -183,7 +172,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Formulário para criar lista */}
       <CreateListForm
         show={showCreateForm}
         onClose={() => {
@@ -202,7 +190,6 @@ const Home = () => {
         onSave={saveUpdatedListName}
       />
 
-      {/* Modal de Compartilhamento */}
       <ShareModal
         showModal={showShareModal}
         onClose={() => setShowShareModal(false)}
@@ -210,14 +197,13 @@ const Home = () => {
         listName={listToShare}
       />
 
-      {/* Modal de Confirmação */}
       <ConfirmModal
         show={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
         onConfirm={confirmDelete}
         message="Você tem certeza de que deseja excluir esta lista?"
       />
-      {/* Toast Notification */}
+
       <ToastNotification
         message={toastMessage}
         type={toastType}
