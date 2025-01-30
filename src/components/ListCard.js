@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import Subtitle from './Subtitle';
 
-const ListCard = ({ listName, createdAt, completedAt, onMarkAsBought, onEdit, onDelete, onShare }) => {
+const ListCard = ({ listName, createdAt, completedAt, onClick, onMarkAsBought, onEdit, onDelete, onShare }) => {
     // Formatar datas
     const formattedCreatedDate = new Date(createdAt).toLocaleDateString();
     const formattedCompletedDate = completedAt ? new Date(completedAt).toLocaleDateString() : null;
@@ -12,7 +12,7 @@ const ListCard = ({ listName, createdAt, completedAt, onMarkAsBought, onEdit, on
         <div
             className={`card mb-3 shadow-sm border-0 ${completedAt ? 'bg-light text-muted' : 'bg-light-custom'}`}
         >
-            <div className="card-body">
+            <div className="card-body" onClick={onClick}>
                 {/* Ícone, Nome da Lista e Data */}
                 <div className="mb-3 text-start">
                     <div className="d-flex align-items-center">
