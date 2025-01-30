@@ -14,7 +14,7 @@ const Sidebar = ({ lists, onSelectList, onEdit, onDelete, onShare, onCreateNewLi
   return (
     <div>
       {/* Botão para alternar a visibilidade da Sidebar em telas pequenas */}
-      <div className="position-fixed top-0 start-50 translate-middle-x w-50 mt-4 z-5">
+      <div className="position-fixed top-0 start-50 translate-middle-x w-50 mt-4 z-5 d-block d-lg-none">
         <button
           className="btn btn-primary w-100"
           onClick={toggleSidebar}
