@@ -3,6 +3,7 @@ const API_URL = `${URL_BASE}/list-item`;
 
 const ListItem = {
     creatListItem: async (itemData) => {
+        
         try {
             const response = await fetch(`${API_URL}`, {
                 method: "POST",
@@ -12,7 +13,8 @@ const ListItem = {
                 body: JSON.stringify(itemData),
             });
             const result = await response.json();
-            return result;
+            
+            return result.data;
         } catch (error) {
             console.error("Erro ao criar item:", error);
             throw error;
@@ -40,6 +42,7 @@ const ListItem = {
                 body: JSON.stringify(itemData),
             });
             const result = await response.json();
+
             return result;
         } catch (error) {
             console.error("Erro ao atualizar item:", error);
@@ -60,14 +63,14 @@ const ListItem = {
         }
     },
 
-    markAsPurchased: async (purchaseData) => {
+    markAsPurchased: async ({ itemListId, userId, categoryId, brandId, barcode }) => {
         try {
-            const response = await fetch(`${API_URL}/purchased`, {
+            const response = await fetch(`${API_URL}/purchase`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(purchaseData),
+                body: JSON.stringify({ itemListId, userId, categoryId, brandId, barcode }),
             });
             const result = await response.json();
             return result;
