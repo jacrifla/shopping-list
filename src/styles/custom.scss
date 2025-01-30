@@ -180,3 +180,17 @@ input.text-primary {
 .pr-2 {
   padding-right: 0.25rem;
 }
+
+.bought-item {
+  background-color: #f2f2f2;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.bought-item .bi-check-circle-fill {
+  color: #28a745;
+}
+
+.bought-item .bi-check-circle {
+  color: #ccc;
+}
