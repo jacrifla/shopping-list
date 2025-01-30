@@ -1,4 +1,5 @@
-@use '~bootstrap/scss/bootstrap';
+// Usando a sintaxe moderna @use para importar o Bootstrap
+@use 'bootstrap/scss/bootstrap' as *;
 
 // Definindo as variáveis de cor
 $primary: #ff9f7f;
@@ -12,6 +13,7 @@ $accent2: #b4d6bc;
 $accent3: #8094FF;
 $white: #fff;
 
+// Estilos customizados
 .bg-light-custom {
   background-color: $light !important;
 }
@@ -46,7 +48,7 @@ $white: #fff;
 
 .btn-outline-success:hover {
   background-color: $secondary;
-  color: #fff;
+  color: $white;
 }
 
 .btn-accent {
@@ -54,8 +56,8 @@ $white: #fff;
   color: $light;
 }
 
-.bg-white{
-  background-color: white !important;
+.bg-white {
+  background-color: $white !important;
 }
 
 .text-primary {
@@ -66,7 +68,7 @@ $white: #fff;
   border-color: $primary !important;
 }
 
-.text-danger{
+.text-danger {
   color: $danger !important;
 }
 
@@ -96,7 +98,6 @@ $white: #fff;
 .fs-8 {
   font-size: 0.775rem;
 }
-
 
 .bg-primary {
   background-color: $primary !important;
