@@ -53,7 +53,6 @@ const useItems = () => {
     }, []);
 
     const handleItemSelect = (item) => {
-        console.log("Selecionado:", item);
         setIsEditing(true);
         setItem({
             itemId: item.itemId,
@@ -79,9 +78,6 @@ const useItems = () => {
             brandId: item.brandId || null,
         };
 
-        console.log(itemData);
-
-
         try {
             if (isEditing && item.itemId) {
 
@@ -106,9 +102,6 @@ const useItems = () => {
                     itemData.barcode
                 );
 
-                console.log('Novo item criado:', newItem);
-
-
                 setAllItems(prevItems => [
                     ...prevItems,
                     { ...itemData, itemId: newItem.itemId, category: itemData.categoryId, brand: itemData.brandId }
@@ -122,9 +115,7 @@ const useItems = () => {
         }
     };
 
-    const handleDeleteItem = async (itemId) => {
-        console.log("Item ID para exclusão:", itemId);
-        
+    const handleDeleteItem = async (itemId) => {        
         try {
             await itemsService.deleteItem(itemId);
             setToast({ show: true, message: 'Item excluído com sucesso!', type: 'success' });
