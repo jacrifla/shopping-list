@@ -121,7 +121,7 @@ const CategoryForm = () => {
             setSelectedCategory(selectedCategory);
             setNewCategoryName(selectedCategory.categoryName);
         } else {
-            console.log("Categoria não encontrada");
+            showToastNotification("Categoria não encontrada", 'error');
         }
     };
 

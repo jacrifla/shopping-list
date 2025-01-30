@@ -121,7 +121,7 @@ const BrandForm = () => {
             setSelectedBrand(selectedBrand);
             setNewBrandName(selectedBrand.brandName);
         } else {
-            console.log("Marca não encontrada");
+            showToastNotification("Marca não encontrada", 'error') ;
         }
     };
 
