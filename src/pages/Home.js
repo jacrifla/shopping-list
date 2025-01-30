@@ -34,12 +34,11 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [confirmAction, setConfirmAction] = useState(null);
-  const [setItemDetails] = useState({
+  const [itemDetails, setItemDetails] = useState({
     categoryId: null,
     brandId: null,
     barcode: null,
   });
-
 
   useEffect(() => {
     const getLists = async () => {
@@ -55,12 +54,11 @@ const Home = () => {
     const getListItems = async () => {
       try {
         if (!selectedList) {
-          console.log('Nenhuma lista selecionada.');
+          showToastNotification('Nenhuma lista selecionada.', 'danger');
           return;
         }
         const response = await listItemService.getItemsByListId(selectedList);
         setSelectedListItems(response.data);
-        // console.log(response);
 
       } catch (error) {
         console.error('Erro ao carregar itens da lista', error);
@@ -173,7 +171,6 @@ const Home = () => {
   };
 
   const handleSelectList = async (listId) => {
-    console.log('ID da lista recebido no handleSelectList:', listId);
     try {
       // Encontrar a lista pelo ID
       const selected = lists.find((list) => list.listId === listId);
@@ -191,8 +188,6 @@ const Home = () => {
 
   // Itens
   const handleAddNewItem = async (newItem) => {
-    console.log('NOVO ITEM: ', newItem);
-
     // Certifique-se de que listId está sendo passado corretamente
     if (!newItem.listId) {
       console.error("listId não foi fornecido.");
@@ -300,22 +295,19 @@ const Home = () => {
   };
 
   const handleSaveItemDetails = (data) => {
-    console.log('Dados recebidos do modal:', data);
-
     if (!selectedItem) {
       console.error("Nenhum item selecionado.");
       return;
     }
 
-    // Verifica se data é undefined e define valores padrão
     const itemDetails = {
       categoryId: data?.categoryId || null,
       brandId: data?.brandId || null,
       barcode: data?.barcode || null,
     };
 
-    setItemDetails(itemDetails);
-    setShowModal(false); // Fecha o modal de detalhes
+    setItemDetails(itemDetails);  // Atualiza o estado corretamente com o novo objeto
+    setShowModal(false);  // Fecha o modal de detalhes
 
     handleMarkItemAsBought({
       itemListId: selectedItem.itemListId,
@@ -398,7 +390,6 @@ const Home = () => {
               <div className="card-body">
                 {selectedList ? (
                   <>
-                    {/* {console.log(selectedListItems)} */}
                     <ItemList
                       listName={selectedListName}
                       items={selectedListItems}
