@@ -191,6 +191,18 @@ const CategoryForm = () => {
                 onClose={() => setShowModal(false)}
                 onConfirm={handleDeleteCategory}
                 message="Você tem certeza de que deseja excluir esta categoria?"
+                buttons={[
+                    {
+                        className: 'btn-danger',
+                        text: 'Excluir',
+                        action: handleDeleteCategory
+                    },
+                    {
+                        className: 'btn-secondary',
+                        text: 'Cancelar',
+                        action: () => setShowModal(false)
+                    }
+                ]}
             />
             {/* Toast Notification */}
             <ToastNotification

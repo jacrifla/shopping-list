@@ -191,6 +191,18 @@ const BrandForm = () => {
                 onClose={() => setShowModal(false)}
                 onConfirm={handleDeleteBrand}
                 message="Você tem certeza de que deseja excluir esta marca?"
+                buttons={[
+                    {
+                        text: 'Sim',
+                        className: 'btn btn-danger',
+                        action: handleDeleteBrand,
+                    },
+                    {
+                        text: 'Não',
+                        className: 'btn btn-secondary',
+                        action: () => setShowModal(false),
+                    },
+                ]}
             />
             {/* Toast Notification */}
             <ToastNotification

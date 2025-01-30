@@ -96,6 +96,18 @@ const Items = () => {
                     onClose={() => setShowConfirmModal(false)}
                     onConfirm={handleConfirmDelete}
                     message={`Tem certeza de que deseja excluir o item?`}
+                    buttons={[
+                        {
+                            text: 'Sim',
+                            className: 'btn btn-danger',
+                            action: handleConfirmDelete
+                        },
+                        {
+                            text: 'Não',
+                            className: 'btn btn-primary',
+                            action: () => setShowConfirmModal(false)
+                        }
+                    ]}
                 />
             </div>
         </div>
