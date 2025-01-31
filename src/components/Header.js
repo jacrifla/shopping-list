@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <>
       {/* Header para telas grandes */}
-      <header className="bg-primary text-white py-3 d-none d-sm-block">
+      <header className="bg-primary text-white py-3 d-none d-lg-block">
         <div className="container d-flex justify-content-between align-items-center">
           <Title className="fs-4" text={'Lista da Mamãe'} />
           <nav>
@@ -40,8 +40,8 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Barra inferior para telas pequenas */}
-      <nav className="bg-primary text-white py-2 d-sm-none fixed-bottom">
+      {/* Barra inferior para telas pequenas e médias */}
+      <nav className="bg-primary text-white py-2 d-lg-none fixed-bottom">
         <ul className="nav justify-content-around">
           <li className="nav-item">
             <Link to="/home" className="nav-link text-white text-center">
