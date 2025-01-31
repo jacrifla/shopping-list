@@ -54,7 +54,7 @@ const Home = () => {
     const getListItems = async () => {
       try {
         if (!selectedList) {
-          showToastNotification('Nenhuma lista selecionada.', 'danger');
+          console.error('Nenhuma lista selecionada.');
           return;
         }
         const response = await listItemService.getItemsByListId(selectedList);
@@ -147,18 +147,29 @@ const Home = () => {
 
   const markAsBought = async (listId) => {
     try {
-      const totalAmount = 100; // Substitua pelo valor real do total da lista
+      // Encontrar os itens selecionados para a lista pela ID
+      const selectedItems = selectedListItems.filter((item) => item.listId === listId);
+
+      if (selectedItems.length === 0) {
+        showToastNotification('Lista sem itens ou com dados inválidos.', 'danger');
+        return;
+      }
+
+      // Calcular o total da lista somando os preços dos itens e multiplicando pela quantidade
+      const totalAmount = selectedItems.reduce((total, item) => total + (item.price * item.quantity || 0), 0);
+
+      // Chamar o serviço para marcar a lista como concluída
       const result = await listService.markAsCompleted(listId, totalAmount);
 
       if (result.status) {
-        setLists(lists.map((list) =>
-          list.listId === listId
+        setLists(lists.map((listItem) =>
+          listItem.listId === listId
             ? {
-              ...list,
+              ...listItem,
               completedAt: result.data.completedAt,
               totalAmount: result.data.totalAmount,
             }
-            : list
+            : listItem
         ));
         showToastNotification('Lista marcada como concluída!', 'success');
       } else {
@@ -175,8 +186,8 @@ const Home = () => {
       // Encontrar a lista pelo ID
       const selected = lists.find((list) => list.listId === listId);
       if (selected) {
-        setSelectedList(listId); // Define o ID da lista
-        setSelectedListName(selected.listName); // Define o nome da lista
+        setSelectedList(listId);
+        setSelectedListName(selected.listName);
       } else {
         console.warn('Lista não encontrada para o ID:', listId);
       }
@@ -197,14 +208,14 @@ const Home = () => {
     try {
       // Verifique se o item é 'custom' ou 'common' antes de enviar
       const itemData = {
-        listId: newItem.listId,  // Certifique-se de que o listId está presente
+        listId: newItem.listId,
         quantity: newItem.quantity,
         price: newItem.price,
       };
 
       if (newItem.itemType === 'custom') {
         itemData.itemName = newItem.name;
-        itemData.item_type = 'custom'; // Explicitamente definindo o tipo 'custom'
+        itemData.item_type = 'custom';
       } else {
         itemData.itemId = newItem.itemId;
       }
@@ -239,8 +250,8 @@ const Home = () => {
   };
 
   const handleDeleteItem = (itemListId) => {
-    setItemToDelete(itemListId);  // Armazenando o item a ser excluído
-    setConfirmAction('deleteItem');  // Ação para excluir item
+    setItemToDelete(itemListId);
+    setConfirmAction('deleteItem');
     setShowItemConfirmModal(true);
   };
 
@@ -255,26 +266,26 @@ const Home = () => {
     } catch (error) {
       showToastNotification(`Erro ao excluir item: ${error}`, 'danger');
     } finally {
-      setShowItemConfirmModal(false); // Fecha o modal de confirmação
+      setShowItemConfirmModal(false);
     }
   };
 
-  const handleMarkItemAsBought = async ({ itemListId, userId, categoryId, brandId, barcode }) => {
-    const purchaseData = {
-      itemListId,
-      userId,
-      categoryId,
-      brandId,
-      barcode,
-    };
-
+  const handleMarkItemAsBought = async () => {
     try {
-      await listItemService.markAsPurchased(purchaseData);
+      await listItemService.markAsPurchased({
+        itemListId: selectedItem.itemListId,
+        userId: getUserId(),
+        categoryId: itemDetails.categoryId,
+        brandId: itemDetails.brandId,
+        barcode: itemDetails.barcode,
+      });
+
       setSelectedListItems(selectedListItems.map(item =>
-        item.itemListId === itemListId
+        item.itemListId === selectedItem.itemListId
           ? { ...item, purchasedAt: new Date().toISOString() }
           : item
       ));
+
       showToastNotification('Item marcado como comprado!', 'success');
     } catch (error) {
       console.error('Erro ao marcar item como comprado:', error);
@@ -290,8 +301,8 @@ const Home = () => {
     }
 
     setSelectedItem(item);
-    setConfirmAction('markAsBought'); // Definindo a ação correta
-    setShowItemConfirmModal(true); // Abrindo o modal de confirmação
+    setConfirmAction('markAsBought');
+    setShowItemConfirmModal(true);
   };
 
   const handleSaveItemDetails = (data) => {
@@ -300,22 +311,17 @@ const Home = () => {
       return;
     }
 
-    const itemDetails = {
+    const newItemDetails = {
       categoryId: data?.categoryId || null,
       brandId: data?.brandId || null,
       barcode: data?.barcode || null,
     };
 
-    setItemDetails(itemDetails);  // Atualiza o estado corretamente com o novo objeto
-    setShowModal(false);  // Fecha o modal de detalhes
+    setItemDetails(newItemDetails);
+    setShowModal(false);
 
-    handleMarkItemAsBought({
-      itemListId: selectedItem.itemListId,
-      userId: getUserId(),
-      categoryId: itemDetails.categoryId,
-      brandId: itemDetails.brandId,
-      barcode: itemDetails.barcode,
-    });
+    // Agora usamos o estado itemDetails dentro de handleMarkItemAsBought
+    handleMarkItemAsBought();
   };
 
   const handleConfirmAction = (action) => {
@@ -324,7 +330,7 @@ const Home = () => {
     } else if (action === 'deleteItem') {
       confirmDeleteItem();
     } else if (action === 'details') {
-      setShowModal(true); // Abre o modal de detalhes
+      setShowModal(true);
     } else if (action === 'noDetails') {
       handleMarkItemAsBought({
         itemListId: selectedItem.itemListId,
