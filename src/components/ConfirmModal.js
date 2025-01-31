@@ -5,6 +5,13 @@ import Subtitle from './Subtitle';
 const ConfirmModal = ({ show, onClose, onConfirm, message, buttons }) => {
   if (!show) return null;
 
+  const handleButtonClick = (button) => {
+    if (button.action) {
+      button.action();
+    }
+    onClose();
+  };
+
   return (
     <div className="modal d-block" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
       <div className="modal-dialog modal-dialog-centered">
@@ -16,12 +23,7 @@ const ConfirmModal = ({ show, onClose, onConfirm, message, buttons }) => {
               <Button
                 key={index}
                 className={`btn ${button.className} w-100`}
-                onClick={() => {
-                  if (button.action) {
-                    button.action();
-                  }
-                  onClose();
-                }}
+                onClick={() => handleButtonClick(button)}
                 text={button.text}
                 showText={true}
               />
@@ -32,6 +34,5 @@ const ConfirmModal = ({ show, onClose, onConfirm, message, buttons }) => {
     </div>
   );
 };
-
 
 export default ConfirmModal;

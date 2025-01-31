@@ -93,7 +93,6 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    console.log('Usuário saiu');
     clearAuth();
     setShowLogoutModal(false);
     navigate('/');
@@ -168,12 +167,16 @@ const Profile = () => {
             {
               text: 'Sim',
               className: 'btn-danger',
-              action: handleLogout
+              action: () => {
+                handleLogout();
+              }
             },
             {
               text: 'Não',
               className: 'btn-secondary',
-              action: () => setShowLogoutModal(false)
+              action: () => {
+                setShowLogoutModal(false);
+              }
             }
           ]}
         />

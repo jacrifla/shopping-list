@@ -339,25 +339,56 @@ const Home = () => {
         brandId: null,
         barcode: null,
       });
+    } else if (action === null) {
+      // Quando o botão "Não" é clicado e a ação é nula, apenas fecha o modal
+      setShowItemConfirmModal(false);
     }
   };
 
   const getModalButtons = () => {
     if (confirmAction === 'deleteList') {
       return [
-        { text: "Sim, excluir", className: "btn-danger", action: "deleteList" },
-        { text: "Cancelar", className: "btn-secondary", action: null }
+        {
+          text: "Sim, excluir",
+          className: "btn-danger",
+          action: confirmDeleteList,
+        },
+        {
+          text: "Cancelar",
+          className: "btn-secondary",
+          action: () => setShowItemConfirmModal(false),
+        }
       ];
     } else if (confirmAction === 'deleteItem') {
       return [
-        { text: "Sim, excluir", className: "btn-danger", action: "deleteItem" },
-        { text: "Cancelar", className: "btn-secondary", action: null }
+        {
+          text: "Sim, excluir",
+          className: "btn-danger",
+          action: confirmDeleteItem,
+        },
+        {
+          text: "Cancelar",
+          className: "btn-secondary",
+          action: () => setShowItemConfirmModal(false),
+        }
       ];
     } else if (confirmAction === 'markAsBought') {
       return [
-        { text: "Sim, adicionar detalhes", className: "btn-primary", action: "details" },
-        { text: "Não, apenas marcar", className: "btn-success", action: "noDetails" },
-        { text: "Cancelar", className: "btn-secondary", action: null }
+        {
+          text: "Sim, adicionar detalhes",
+          className: "btn-primary",
+          action: () => setShowModal(true),
+        },
+        {
+          text: "Não, apenas marcar",
+          className: "btn-success",
+          action: () => handleConfirmAction('noDetails'),
+        },
+        {
+          text: "Cancelar",
+          className: "btn-secondary",
+          action: () => setShowItemConfirmModal(false),
+        }
       ];
     }
     return [];
