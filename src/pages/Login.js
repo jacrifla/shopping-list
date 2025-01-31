@@ -24,7 +24,7 @@ const Login = () => {
       const response = await login(email, password);
 
       saveAuthToken(response.token, response.user)
-      
+
       navigate('/home');
 
     } catch (error) {
@@ -37,7 +37,7 @@ const Login = () => {
       <div className="row justify-content-center w-100">
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center">
           <div className="text-center mt-5 mb-4 flex-grow-1">
-            <Title className="title-login-signup" text={'Fazer Login'}/>
+            <Title className="title-login-signup" text={'Fazer Login'} />
           </div>
           {error && <div className="alert alert-danger text-center">{error}</div>}
           <form onSubmit={handleSubmit} className="mt-4">
@@ -48,6 +48,8 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 icon="envelope"
+                name="email"
+                autoComplete="email"
               />
             </div>
             <div className="mb-3">
@@ -57,10 +59,12 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 icon="lock"
+                name="password"
+                autoComplete="current-password"
               />
             </div>
-            <Button 
-              className="btn btn-primary w-100" 
+            <Button
+              className="btn btn-primary w-100"
               type="submit"
               text='Entrar'
               showText={true}

@@ -26,14 +26,14 @@ const Signup = () => {
       return;
     }
 
-    
+
     if (password !== confirmPassword) {
       setToastMessage('As senhas não coincidem!');
       setToastType('danger');
       setShowToast(true);
       return;
     }
-    
+
     try {
       await createUser(name, email, password);
       setToastMessage('Usuário cadastrado com sucesso!');
@@ -52,14 +52,14 @@ const Signup = () => {
       <div className="row justify-content-center w-100">
         <div className="col-12 col-md-6 d-flex flex-column">
           <div className="text-center mt-5 mb-4 flex-grow-1">
-            <Title className="title-login-signup" text={'Cadastro'}/>
+            <Title className="title-login-signup" text={'Cadastro'} />
           </div>
 
-          <ToastNotification 
-            message={toastMessage} 
-            type={toastType} 
-            show={showToast} 
-            onClose={() => setShowToast(false)} 
+          <ToastNotification
+            message={toastMessage}
+            type={toastType}
+            show={showToast}
+            onClose={() => setShowToast(false)}
           />
 
           <form onSubmit={handleSubmit} className="mt-4">
@@ -70,6 +70,7 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 icon="person"
+                name="name"
               />
             </div>
             <div className="mb-3">
@@ -79,6 +80,8 @@ const Signup = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 icon="envelope"
+                name="email"
+                autoComplete="email"
               />
             </div>
             <div className="mb-3">
@@ -88,6 +91,8 @@ const Signup = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 icon="lock"
+                name="password"
+                autoComplete="new-password"
               />
             </div>
             <div className="mb-3">
@@ -97,11 +102,13 @@ const Signup = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 icon="lock"
+                name="confirm-password"
+                autoComplete="new-password"
               />
             </div>
             <Button
               className="btn btn-primary w-100"
-              type="submit" 
+              type="submit"
               text="Cadastrar"
               showText={true}
             />

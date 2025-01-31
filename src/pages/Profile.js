@@ -73,8 +73,8 @@ const Profile = () => {
 
       if (data && data.status) {
         // Conceder acesso ao usuário
-        await grantAccess(token, userId);       
-  
+        await grantAccess(token, userId);
+
         setToastMessage('Acesso concedido à lista!');
         setToastType('success');
         setToken('');
@@ -83,7 +83,7 @@ const Profile = () => {
         setToastMessage('Token inválido!');
         setToastType('danger');
       }
-  
+
       setShowToast(true);
     } catch (error) {
       setToastMessage('Erro ao validar o token');
@@ -110,7 +110,7 @@ const Profile = () => {
             show={showToast}
             onClose={() => setShowToast(false)}
           />
-          <Title icon={'person-fill'} text={'Perfil'}/>
+          <Title icon={'person-fill'} text={'Perfil'} />
           <Button
             icon={'box-arrow-right'}
             className="btn btn-danger"
@@ -121,18 +121,18 @@ const Profile = () => {
         </div>
 
         <div className="row flex-grow-1">
-          <UserInfo 
-            name={name} 
-            email={email} 
-            setName={setName} 
-            setEmail={setEmail} 
-            handleUpdateProfile={handleUpdateProfile} 
-            handleChangePassword={handleChangePassword} 
+          <UserInfo
+            name={name}
+            email={email}
+            setName={setName}
+            setEmail={setEmail}
+            handleUpdateProfile={handleUpdateProfile}
+            handleChangePassword={handleChangePassword}
           />
-          <TokenManagement 
-            token={token} 
-            setToken={setToken} 
-            handleTokenSubmit={handleTokenSubmit} 
+          <TokenManagement
+            token={token}
+            setToken={setToken}
+            handleTokenSubmit={handleTokenSubmit}
           />
         </div>
 
@@ -144,6 +144,18 @@ const Profile = () => {
           onClose={() => setShowConfirmModal(false)}
           onConfirm={handleDeleteAccount}
           message="Tem certeza que deseja excluir sua conta?"
+          buttons={[
+            {
+              text: 'Sim',
+              className: 'btn-danger',
+              action: handleDeleteAccount
+            },
+            {
+              text: 'Não',
+              className: 'btn-secondary',
+              action: () => setShowConfirmModal(false)
+            }
+          ]}
         />
 
         {/* Modal de Confirmação de Logout */}
@@ -152,7 +164,20 @@ const Profile = () => {
           onClose={() => setShowLogoutModal(false)}
           onConfirm={handleLogout}
           message="Tem certeza que deseja sair?"
+          buttons={[
+            {
+              text: 'Sim',
+              className: 'btn-danger',
+              action: handleLogout
+            },
+            {
+              text: 'Não',
+              className: 'btn-secondary',
+              action: () => setShowLogoutModal(false)
+            }
+          ]}
         />
+
       </div>
     </div>
   );

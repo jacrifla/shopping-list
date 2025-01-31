@@ -12,6 +12,7 @@ const Input = ({
   readOnly = false,
   name = '',
   maxLength,
+  autoComplete = '',
 }) => {
   if (!onChange) {
     console.error('Precisa passar o onChange');
@@ -37,6 +38,7 @@ const Input = ({
           name={name}
           onKeyDown={onKeyDown}
           maxLength={maxLength}
+          autoComplete={autoComplete}
         />
       </div>
     </div>
@@ -54,6 +56,7 @@ Input.propTypes = {
   readOnly: PropTypes.bool,
   name: PropTypes.string,
   maxLength: PropTypes.number,
+  autoComplete: PropTypes.string,
 };
 
 export default Input;

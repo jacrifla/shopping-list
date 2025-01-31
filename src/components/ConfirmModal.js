@@ -18,7 +18,7 @@ const ConfirmModal = ({ show, onClose, onConfirm, message, buttons }) => {
                 className={`btn ${button.className} w-100`}
                 onClick={() => {
                   if (button.action) {
-                    onConfirm(button.action);
+                    button.action();
                   }
                   onClose();
                 }}
