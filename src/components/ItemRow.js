@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Input from "./Input";
+import Button from "./Button";
 
-const ItemRow = ({ item, onEdit, onDelete, onAskDetails }) => {
+const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
     const [editingItem, setEditingItem] = useState(null);
     const [editingItemId, setEditingItemId] = useState(null);
 
@@ -9,7 +10,6 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails }) => {
         const { value } = e.target;
         setEditingItem((prev) => ({
             ...prev,
-            itemName: field === 'name' ? value : prev.itemName,
             [field]: value,
         }));
     };
@@ -29,20 +29,17 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails }) => {
 
     const handleSaveEditing = (itemId) => {
         if (editingItem) {
-            const updatedItem = {
-                ...editingItem,
-                itemName: editingItem.itemName,
-            };
-    
-            // Atualizando a lista de itens no componente pai (passando para o onEdit)
-            onEdit(itemId, updatedItem);
+            onEdit(itemId, editingItem);
             setEditingItemId(null);
             setEditingItem(null);
         }
-    };    
+    };
 
     return (
-        <div className={`row border-0 rounded align-items-center g-2 ${item.purchasedAt ? "bought-item" : ""} mb-2 mb-sm-2`}>
+        <div className={`row pt-3 rounded align-items-center g-xl-2 ${item.purchasedAt ? "bought-item" : ""} mb-2 mb-sm-2`}>
+            <div className="d-flex align-items-center">
+                <strong>Item - {index + 1}</strong>
+            </div>
             {/* Nome do item */}
             <div className="col-12 col-sm-6 col-md-3">
                 <Input
@@ -93,7 +90,7 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails }) => {
             </div>
 
             {/* Ações */}
-            <div className="col-12 col-sm-6 col-md-3 text-center d-flex justify-content-center gap-3 flex-wrap">
+            <div className="col-12 col-sm-6 col-md-3 text-center d-flex justify-content-center gap-3 flex-wrap mb-3">
                 {editingItemId === item.itemListId ? (
                     <div className="d-flex gap-3 w-100">
                         <button
@@ -111,24 +108,21 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails }) => {
                     </div>
                 ) : (
                     <div className="d-flex justify-content-between w-100 gap-3">
-                        <button
-                            className="btn btn-success w-100"
+                        <Button 
+                            className={'btn btn-success w-100'}
                             onClick={() => onAskDetails(item.itemListId)}
-                        >
-                            <i className={`bi ${item.purchasedAt ? "bi-check-circle-fill" : "bi-check-circle"}`}></i>
-                        </button>
-                        <button
-                            className="btn btn-warning w-100"
+                            icon={`${item.purchasedAt ? 'check-circle-fill' : 'check-circle'}`}
+                        />
+                        <Button 
+                            className={'btn btn-warning w-100'}
                             onClick={() => handleEditItem(item)}
-                        >
-                            <i className="bi bi-pencil-square"></i>
-                        </button>
-                        <button
-                            className="btn btn-danger w-100"
+                            icon={`pencil-square`}
+                        />
+                        <Button 
+                            className={'btn btn-danger w-100'}
                             onClick={() => onDelete(item.itemListId)}
-                        >
-                            <i className="bi bi-trash-fill"></i>
-                        </button>
+                            icon={`trash-fill`}
+                        />
                     </div>
                 )}
             </div>

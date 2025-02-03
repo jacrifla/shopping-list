@@ -1,4 +1,4 @@
-import { getUserId } from '../services/authService'; // Importando a função para pegar o userId
+import { getUserId } from '../services/authService';
 import { URL_BASE } from "../utils/base";
 
 const API_URL = `${URL_BASE}/list`;
@@ -165,9 +165,12 @@ const List = {
         }
     },
 
-    acceptShareToken: async (userId, token) => {
+    acceptShareToken: async (token) => {
+        const userId = getUserId();
         try {
             if (!userId || !token) throw new Error("O ID do usuário e o token são obrigatórios.");
+            console.log('UserId: ', userId, 'Token: ', token);
+            
 
             const response = await fetch(`${API_URL_SHARE_LIST}/accept-token`, {
                 method: 'POST',

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button";
-import Input from "./Input";
 import Subtitle from "./Subtitle";
 import ItemRow from "./ItemRow";
 import itemsService from "../services/itemsService";
+import AddItemModal from "./AddItemModal";
 
 const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onAskDetails }) => {
     const [itemInputs, setItemInputs] = useState({ name: "", quantity: 1, price: 0, itemType: "custom" });
     const [allItems, setAllItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [isItemSelected, setIsItemSelected] = useState(false);
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -23,6 +25,7 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
     }, []);
 
     useEffect(() => {
+        // Lógica de verificação de item enquanto o usuário digita
         const checkItemType = (itemName) => {
             if (!itemName.trim()) return;
 
@@ -44,6 +47,7 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
                 }));
             }
 
+            // Atualiza os itens filtrados conforme o nome digitado
             const filtered = allItems.filter((item) =>
                 item.itemName.toLowerCase().includes(itemName.toLowerCase())
             );
@@ -63,6 +67,14 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
 
     const clearInputFields = () => {
         setItemInputs({ name: "", quantity: 1, price: 0, itemType: "custom" });
+        setFilteredItems([]);
+        setIsItemSelected(false);
+    };
+
+    const handleSaveItem = () => {
+        onAddNewItem({ ...itemInputs, listId });
+        setShowModal(false);
+        clearInputFields();
     };
 
     const totalValue = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
@@ -79,75 +91,41 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
                     />
                 </div>
 
-                {/* Adição de Itens */}
-                <div className="row border-0 rounded mb-3 g-2 d-flex align-items-center">
-                    <div className="col-12 col-sm-6 col-md-3 d-flex flex-column align-items-center">
-                        <Input
-                            name="name"
-                            placeholder="Nome do item"
-                            value={itemInputs.name}
-                            onChange={handleAddInputChange}
-                        />
-                        {filteredItems.length > 0 && (
-                            <ul className="dropdown-menu show">
-                                {filteredItems.map((item) => (
-                                    <li key={item.itemId} onClick={() => setItemInputs({ ...itemInputs, name: item.itemName })}>
-                                        <button className="dropdown-item">{item.itemName}</button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-2 d-flex justify-content-center align-items-center">
-                        <Input
-                            type="number"
-                            name="quantity"
-                            placeholder="Qtd."
-                            value={itemInputs.quantity}
-                            onChange={handleAddInputChange}
-                        />
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-2 d-flex align-items-center">
-                        <span>R$</span>
-                        <input
-                            type="number"
-                            step="0.01"
-                            name="price"
-                            placeholder="Preço"
-                            value={itemInputs.price}
-                            onChange={handleAddInputChange}
-                            className="form-control border-0 bg-transparent"
-                        />
-                    </div>
-                    <div className="col-12 col-sm-4 col-md-2 text-center">
-                        <strong>R$ {(itemInputs.quantity * itemInputs.price).toFixed(2)}</strong>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-3 text-center">
-                        <Button
-                            text="Adicionar"
-                            icon="floppy-fill"
-                            className="btn-primary w-100"
-                            onClick={() => {
-                                onAddNewItem({ ...itemInputs, listId });
-                                clearInputFields();
-                            }}
-                        />
-                    </div>
-                </div>
-
-                {/* Lista de Itens */}
                 {items.length === 0 && <p className="text-center text-muted">Nenhum item encontrado.</p>}
 
-                {items.map((item) => (
+                {items.map((item, index) => (
                     <ItemRow
                         key={item.itemListId}
                         item={item}
                         onEdit={onEdit}
                         onDelete={onDelete}
                         onAskDetails={onAskDetails}
+                        index={index}
                     />
                 ))}
             </div>
+
+            <Button
+                icon="plus-lg"
+                className="btn-outline-success position-fixed end-0 m-3 shadow "
+                style={{ bottom: "5em", right: "10px", width: "3em", height: "3em" }}
+                onClick={() => setShowModal(true)}
+            />
+
+            <AddItemModal
+                showModal={showModal}
+                onClose={() =>{
+                    setShowModal(false)
+                    clearInputFields()
+                }}
+                onSaveItem={handleSaveItem}
+                itemInputs={itemInputs}
+                handleAddInputChange={handleAddInputChange}
+                filteredItems={filteredItems}
+                setItemInputs={setItemInputs}
+                setIsItemSelected={setIsItemSelected}
+                isItemSelected={isItemSelected}
+            />
         </div>
     );
 };

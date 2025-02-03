@@ -6,11 +6,11 @@ import ToastNotification from '../components/ToastNotification';
 import Header from '../components/Header';
 import { clearAuth } from '../services/authService';
 import { deleteUser, updateUser } from '../services/userService';
-import { findToken, grantAccess } from '../services/shareListAndToken';
 import UserInfo from '../components/Profile/UserInfo';
 import TokenManagement from '../components/Profile/TokenManagement';
 import DangerZone from '../components/Profile/DangerZone';
 import ConfirmModal from '../components/ConfirmModal';
+import listService from '../services/listService';
 
 const Profile = () => {
   const [email, setEmail] = useState('');
@@ -69,12 +69,9 @@ const Profile = () => {
 
   const handleTokenSubmit = async () => {
     try {
-      const data = await findToken(token);
+      const data = await listService.acceptShareToken(token);
 
       if (data && data.status) {
-        // Conceder acesso ao usuário
-        await grantAccess(token, userId);
-
         setToastMessage('Acesso concedido à lista!');
         setToastType('success');
         setToken('');
