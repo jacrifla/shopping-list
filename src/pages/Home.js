@@ -234,11 +234,12 @@ const Home = () => {
     try {
       // Chama o serviço para atualizar o item com os dados de updatedItem
       const updated = await listItemService.updateListItem(itemId, updatedItem);
+      const updatedItemData = updated.data;
 
       // Atualiza o estado dos itens com o item atualizado
-      setSelectedListItems(
-        selectedListItems.map((item) =>
-          item.itemListId === itemId ? { ...item, ...updated } : item
+      setSelectedListItems((prevItems) =>
+        prevItems.map((item) =>
+          item.itemListId === itemId ? { ...item, ...updatedItemData } : item
         )
       );
 
@@ -422,7 +423,7 @@ const Home = () => {
             />
           </div>
 
-          <div className="col-lg-9">
+          <div className="col-lg-9 p-0 p-md-2">
             <div className="card bg-light-custom border-0">
               <div className="card-body">
                 {selectedList ? (

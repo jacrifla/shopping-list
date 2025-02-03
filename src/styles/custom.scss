@@ -195,3 +195,11 @@ input.text-primary {
 .bought-item .bi-check-circle {
   color: #ccc;
 }
+
+@media (max-width: 576px) { /* Aplica apenas em telas menores que SM */
+  .item-divider {
+      border-bottom: 1px solid black; /* Cor suave */
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+  }
+}
