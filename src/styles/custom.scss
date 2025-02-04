@@ -2,16 +2,19 @@
 @use 'bootstrap/scss/bootstrap' as *;
 
 // Definindo as variáveis de cor
-$primary: #ff9f7f;
+$primary: #288FE3;
 $secondary: #98c9a3;
 $success: #ffd4b8;
-$danger: #ff7f7f;
+$danger: #E32F29;
 $dark: #4a4a4a;
 $light: #fff6ed;
 $accent1: #ffb6a3;
 $accent2: #b4d6bc;
-$accent3: #8094FF;
+$accent3: #2954E3;
 $white: #fff;
+$success: #75B546;
+$warning: #F2D12C;
+$opacity: #496F8E;
 
 // Estilos customizados
 .bg-light-custom {
@@ -22,6 +25,20 @@ $white: #fff;
   background-color: transparent;
   color: $accent3;
   border: 2px solid $accent3;
+}
+
+.btn-success {
+  background-color: $success  !important;
+  color: $white;
+}
+
+.btn-warning {
+  background-color: $warning  !important;
+  color: $white;
+}
+.btn-danger {
+  background-color: $danger  !important;
+  color: $white;
 }
 
 .btn-outline-accent:hover {
@@ -188,10 +205,6 @@ input.text-primary {
   opacity: 0.6;
 }
 
-.bought-item .bi-check-circle-fill {
-  color: #28a745;
-}
-
 .bought-item .bi-check-circle {
-  color: #ccc;
+  color: $opacity;
 }
