@@ -31,7 +31,6 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/total-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
-            console.log('Data: ',data);
             
             if (response.ok) {
                 return { success: true, totalSpent: parseFloat(data.data) };
@@ -48,6 +47,7 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/most-purchased?userId=${userId}&limit=${limit}`);
             const data = await response.json();
+            
             if (response.ok) {
                 return {
                     success: true,
@@ -63,7 +63,6 @@ const Purchase = {
             throw new Error(error.message);
         }
     },
-    
 
     getItemsPurchased: async (startDate, endDate) => {
         try {
@@ -80,6 +79,104 @@ const Purchase = {
         }
     },
 
+    getAvgSpendPerPurchase: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/avg-spend-per-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                return { success: true, avgSpendPerPurchase: parseFloat(data.data) };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getLargestPurchase: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/largest-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                return { success: true, largestPurchase: parseFloat(data.data) };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getAvgDailySpend: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/avg-daily-spend?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                return { success: true, avgDailySpend: parseFloat(data.data) };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getCategoryPurchases: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/category-purchases?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();           
+            
+            if (response.ok) {
+                return { 
+                    success: true, 
+                    categoryPurchases: data.data 
+                };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getComparisonSpent: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/comparison-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                return { success: true, comparisonSpent: parseFloat(data.data) };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getTopItemsByValue: async (startDate, endDate) => {
+        try {
+            const userId = getUserId();
+            const response = await fetch(`${API_URL}/top-items-by-value?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const data = await response.json();            
+            
+            if (response.ok) {
+                return { success: true, topItemsByValue: data.data };
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
 };
 
 export default Purchase;

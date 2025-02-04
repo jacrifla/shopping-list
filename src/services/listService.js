@@ -168,9 +168,7 @@ const List = {
     acceptShareToken: async (token) => {
         const userId = getUserId();
         try {
-            if (!userId || !token) throw new Error("O ID do usuário e o token são obrigatórios.");
-            console.log('UserId: ', userId, 'Token: ', token);
-            
+            if (!userId || !token) throw new Error("O ID do usuário e o token são obrigatórios.");            
 
             const response = await fetch(`${API_URL_SHARE_LIST}/accept-token`, {
                 method: 'POST',
@@ -186,7 +184,8 @@ const List = {
             }
 
             const data = await response.json();
-            return data.data; // Retorna os dados da lista compartilhada
+            
+            return data;
         } catch (error) {
             console.error('Erro em acceptShareToken:', error);
             throw error;

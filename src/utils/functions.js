@@ -22,3 +22,10 @@ exports.convertToDatabaseDateFormat = (dateString) => {
 exports.formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 };
+
+exports.formatToISODate = (date) => {
+  if (!date) return "";  
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "Data inválida";
+  return d.toISOString().split("T")[0];
+};
