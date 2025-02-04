@@ -69,18 +69,17 @@ const Profile = () => {
 
   const handleTokenSubmit = async () => {
     try {
-      const data = await listService.acceptShareToken(token);
+      const data = await listService.acceptShareToken(token);      
 
-      if (data && data.status) {
+      if (data.status) {
         setToastMessage('Acesso concedido à lista!');
         setToastType('success');
-        setToken('');
       } else {
         // Token inválido
         setToastMessage('Token inválido!');
         setToastType('danger');
       }
-
+      setToken('');
       setShowToast(true);
     } catch (error) {
       setToastMessage('Erro ao validar o token');
