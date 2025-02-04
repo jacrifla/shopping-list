@@ -3,6 +3,8 @@ import Header from '../components/Header';
 import Title from '../components/Title';
 import purchaseService from '../services/purchaseService';
 import { formatToISODate } from '../utils/functions';
+import Input from '../components/Input';
+import Subtitle from '../components/Subtitle';
 
 const Metrics = () => {
     const [startDate, setStartDate] = useState('');
@@ -119,19 +121,17 @@ const Metrics = () => {
                 {/* Inputs para seleção de datas */}
                 <div className="row mb-4">
                     <div className="col-md-6">
-                        <label className="form-label fw-bold">Data Inicial:</label>
-                        <input
+                        <Input
+                            label='Data Inicial:'
                             type="date"
-                            className="form-control"
                             value={startDate}
                             onChange={(e) => setStartDate(formatToISODate(e.target.value))}
                         />
                     </div>
                     <div className="col-md-6">
-                        <label className="form-label fw-bold">Data Final:</label>
-                        <input
+                        <Input
+                            label='Data Final:'
                             type="date"
-                            className="form-control"
                             value={endDate}
                             onChange={(e) => setEndDate(formatToISODate(e.target.value))}
                         />
@@ -149,8 +149,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-primary">
                             <div className="card-body">
-                                <i className="bi bi-cash fs-3 text-primary mb-3"></i>
-                                <h5 className="card-title">Total Gasto</h5>
+                                <Subtitle text={'Total Gasto'} icon={'cash'} iconClassName='text-primary fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -168,8 +167,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-success">
                             <div className="card-body">
-                                <i className="bi bi-basket fs-3 text-success mb-3"></i>
-                                <h5 className="card-title">Itens Mais Comprados</h5>
+                                <Subtitle text={'Itens Mais Comprados'} icon={'basket'} iconClassName='text-success fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-success" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -198,8 +196,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-warning">
                             <div className="card-body">
-                                <i className="bi bi-cart-check fs-3 text-warning mb-3"></i>
-                                <h5 className="card-title">Total de Itens Comprados</h5>
+                                <Subtitle text={'Total de Itens Comprados'} icon={'cart-check'} iconClassName='text-warning fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-warning" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -217,8 +214,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-info">
                             <div className="card-body">
-                                <i className="bi bi-wallet2 fs-3 text-info mb-3"></i>
-                                <h5 className="card-title">Gasto Médio por Compra</h5>
+                                <Subtitle text={'Gasto Médio por Compra'} icon={'wallet2'} iconClassName='text-info fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-info" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -236,8 +232,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-danger">
                             <div className="card-body">
-                                <i className="bi bi-cash-coin fs-3 text-danger mb-3"></i>
-                                <h5 className="card-title">Maior Compra</h5>
+                                <Subtitle text={'Maior Gasto de um Item'} icon={'cash-coin'} iconClassName='text-danger fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-danger" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -255,8 +250,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-dark">
                             <div className="card-body">
-                                <i className="bi bi-calendar-day fs-3 text-dark mb-3"></i>
-                                <h5 className="card-title">Gasto Diário Médio</h5>
+                                <Subtitle text={'Gasto Diário Médio'} icon={'calendar-day'} iconClassName='text-dark fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-dark" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -274,8 +268,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-primary">
                             <div className="card-body">
-                                <i className="bi bi-tags fs-3 text-primary mb-3"></i>
-                                <h5 className="card-title">Categorias de Compras</h5>
+                                <Subtitle text={'Categorias de Compras'} icon={'tags'} iconClassName='text-primary fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -303,8 +296,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-primary">
                             <div className="card-body">
-                                <i className="bi bi-bar-chart-line fs-3 text-primary mb-3"></i>
-                                <h5 className="card-title">Comparação de Gastos</h5>
+                                <Subtitle text={'Comparação de Gastos'} icon={'bar-chart-line'} iconClassName='text-primary fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -324,8 +316,7 @@ const Metrics = () => {
                     <div className="col-12 col-md-4 mb-4">
                         <div className="card shadow-sm border-warning">
                             <div className="card-body">
-                                <i className="bi bi-box fs-3 text-warning mb-3"></i>
-                                <h5 className="card-title">Top Itens por Valor</h5>
+                                <Subtitle text={'Top Itens por Valo'} icon={'box'} iconClassName='text-warning fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-warning" role="status">
                                         <span className="visually-hidden">Carregando...</span>
