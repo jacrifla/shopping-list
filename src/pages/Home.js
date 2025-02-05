@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import CreateListForm from '../components/CreateListForm';
-import EditListModal from '../components/EditModal';
+import EditListModal from '../components/EditListModal';
 import ShareModal from '../components/ShareModal';
 import ConfirmModal from '../components/ConfirmModal';
 import ToastNotification from '../components/ToastNotification';
@@ -54,7 +54,7 @@ const Home = () => {
     const getListItems = async () => {
       try {
         if (!selectedList) {
-          console.error('Nenhuma lista selecionada.');
+          // console.error('Nenhuma lista selecionada.');
           return;
         }
         const response = await listItemService.getItemsByListId(selectedList);

@@ -133,7 +133,7 @@ const List = {
                 throw new Error(responseData.message || 'Erro ao excluir lista');
             }
 
-            return responseData.data;
+            return responseData;
         } catch (error) {
             console.error('Erro ao excluir lista:', error);
             throw error;
