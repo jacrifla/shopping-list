@@ -19,7 +19,7 @@ const Input = ({
   }
 
   return (
-    <div className="mb-3">
+    <div className="mb-3 mb-md-0">
       {label && <label htmlFor={name} className="form-label">{label}</label>}
       <div className="input-group rounded">
         {icon && (

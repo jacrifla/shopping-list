@@ -80,7 +80,7 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
     const totalValue = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
     return (
-        <div className="card shadow-sm border-0 p-3">
+        <div className="card shadow-sm border-0 p-1">
             <div className="card-body">
                 <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center fs-5 mb-3">
                     <Subtitle icon={"basket3-fill"} text={`${listName}`} />
