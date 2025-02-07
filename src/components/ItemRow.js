@@ -43,10 +43,10 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
             {/* Nome do item */}
             <div className="col-12 col-sm-6 col-md-3">
                 <Input
-                    name="name"
-                    value={editingItemId === item.itemListId ? editingItem?.name || item.itemName : item.itemName}
+                    name="itemName"
+                    value={editingItemId === item.itemListId ? editingItem?.itemName || item.itemName : item.itemName}
                     readOnly={editingItemId !== item.itemListId || item.itemType === "common"}
-                    onChange={(e) => handleInputChange(e, item.itemListId, "name")}
+                    onChange={(e) => handleInputChange(e, item.itemListId, "itemName")}
                     className={editingItemId === item.itemListId ? "form-control" : "form-control-plaintext"}
                 />
             </div>
@@ -108,17 +108,17 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
                     </div>
                 ) : (
                     <div className="d-flex justify-content-between w-100 gap-3">
-                        <Button 
+                        <Button
                             className={'btn btn-success w-100'}
                             onClick={() => onAskDetails(item.itemListId)}
                             icon={`${item.purchasedAt ? 'check-circle-fill' : 'check-circle'}`}
                         />
-                        <Button 
+                        <Button
                             className={'btn btn-warning w-100'}
                             onClick={() => handleEditItem(item)}
                             icon={`pencil-square`}
                         />
-                        <Button 
+                        <Button
                             className={'btn btn-danger w-100'}
                             onClick={() => onDelete(item.itemListId)}
                             icon={`trash-fill`}
