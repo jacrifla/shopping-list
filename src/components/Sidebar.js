@@ -21,7 +21,7 @@ const Sidebar = ({ lists, onSelectList, onEdit, onDelete, onShare, onCreateNewLi
   return (
     <div>
       {/* Botão circular para alternar a visibilidade da Sidebar no canto superior esquerdo */}
-      <div className="position-fixed top-0 start-0 m-3 z-5 d-block d-lg-none">
+      <div className="position-fixed top-0 start-0 m-3 z-5 d-block d-lg-none shadow-sm">
         <Button
           className="btn btn-primary d-flex justify-content-center align-items-center sidebar-toggle-btn"
           onClick={toggleSidebar}

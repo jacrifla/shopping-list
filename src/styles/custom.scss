@@ -225,10 +225,9 @@ input.text-primary {
 /* Sidebar será fixa para telas médias e grandes */
 @media (min-width: 992px) {
   .sidebar {
-    position: relative; /* Não mais fixed */
-    top: 0; /* Garante que fique alinhada no topo da página */
-    height: auto; /* Deixa a altura normal, já que será um elemento dentro do layout */
-    box-shadow: none; /* Pode remover a sombra se necessário */
+    position: relative;
+    top: 0;
+    height: auto;
   }
 }
 
@@ -257,7 +256,6 @@ input.text-primary {
     width: 245px;
     height: calc(91vh - 4.10em);
     z-index: 1049;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     transform: translateX(-100%);
   }
