@@ -208,3 +208,61 @@ input.text-primary {
 .bought-item .bi-check-circle {
   color: $opacity;
 }
+
+.toggle-expand {
+  cursor: pointer;
+}
+
+.sidebar {
+  overflow-y: auto;
+  max-height: 100vh;
+  width: 245px;
+  z-index: 1049;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* Sidebar será fixa para telas médias e grandes */
+@media (min-width: 992px) {
+  .sidebar {
+    position: relative; /* Não mais fixed */
+    top: 0; /* Garante que fique alinhada no topo da página */
+    height: auto; /* Deixa a altura normal, já que será um elemento dentro do layout */
+    box-shadow: none; /* Pode remover a sombra se necessário */
+  }
+}
+
+/* Sidebar será flutuante (off-screen) em telas pequenas */
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    top: 4.75em;
+    left: 0;
+    height: calc(90vh - 5em);
+    width: 245px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.d-block {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    top: 4.10em;
+    left: 0;
+    width: 245px;
+    height: calc(91vh - 4.10em);
+    z-index: 1049;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.d-block {
+    transform: translateX(0);
+  }
+}

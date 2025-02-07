@@ -42,7 +42,7 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
 
     return (
         <div className={`row p-2 rounded align-items-center g-xl-2 ${item.purchasedAt ? "bought-item" : ""} mb-2 mb-sm-2`}>
-            <div className="d-flex align-items-center" onClick={toggleExpand} style={{ cursor: 'pointer' }}>
+            <div className="d-flex align-items-center toggle-expand" onClick={toggleExpand}>
                 <strong>{index + 1}. {item.itemName}</strong>
             </div>
 

@@ -423,30 +423,25 @@ const Home = () => {
             />
           </div>
 
-          <div className="col-lg-9 p-0 p-md-2">
+          <div className="col-lg-9 p-0">
             <div className="card bg-light-custom border-0">
-              <div className="card-body">
+              <div className="card-body p-0">
                 {selectedList ? (
-                  <>
-                    <ItemList
-                      listName={selectedListName}
-                      items={selectedListItems}
-                      listId={selectedList}
-                      onEdit={(itemId, updatedItem) => handleEditItem(itemId, updatedItem)}
-                      onDelete={(itemId) => handleDeleteItem(itemId)}
-                      onAddNewItem={(newItem) => handleAddNewItem(newItem)}
-                      onAskDetails={(itemId) => handleAskForItemDetails(itemId)}
-                    />
-                  </>
+                  <ItemList
+                    listName={selectedListName}
+                    items={selectedListItems}
+                    listId={selectedList}
+                    onEdit={(itemId, updatedItem) => handleEditItem(itemId, updatedItem)}
+                    onDelete={(itemId) => handleDeleteItem(itemId)}
+                    onAddNewItem={(newItem) => handleAddNewItem(newItem)}
+                    onAskDetails={(itemId) => handleAskForItemDetails(itemId)}
+                  />
                 ) : (
-                  <>
-                    <p className="text-center">Selecione uma lista para visualizar os itens.</p>
-                  </>
+                  <p className="text-center">Selecione uma lista para visualizar os itens.</p>
                 )}
               </div>
             </div>
           </div>
-
         </div>
       </div>
 

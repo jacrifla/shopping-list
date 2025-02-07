@@ -22,32 +22,16 @@ const Sidebar = ({ lists, onSelectList, onEdit, onDelete, onShare, onCreateNewLi
     <div>
       {/* Botão circular para alternar a visibilidade da Sidebar no canto superior esquerdo */}
       <div className="position-fixed top-0 start-0 m-3 z-5 d-block d-lg-none">
-        <Button 
-          className="btn btn-primary d-flex justify-content-center align-items-center"
+        <Button
+          className="btn btn-primary d-flex justify-content-center align-items-center sidebar-toggle-btn"
           onClick={toggleSidebar}
           icon={`${isSidebarVisible ? 'x-lg' : 'list'} fs-4`}
-          style={{
-            width: '3em',
-            height: '3em',
-            zIndex: 1050,
-          }}
         />
       </div>
 
       {/* Sidebar com animação para telas pequenas e fixa para telas grandes */}
       <div
-        className={`bg-white rounded-3 p-3 position-fixed ${
-          isSidebarVisible ? 'd-block' : 'd-none'
-        } d-lg-block`}
-        style={{
-          overflowY: 'auto',
-          maxHeight: '100vh',
-          width: '250px',
-          zIndex: 1049,
-          boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
-          transition: 'transform 0.3s ease',
-          top: '4em',
-        }}
+        className={`bg-white rounded-3 p-3 sidebar ${isSidebarVisible ? 'd-block' : ''} d-lg-block`}
       >
         <div className="d-flex justify-content-between align-items-center">
           {/* Título "Minhas Listas" */}
@@ -86,6 +70,7 @@ const Sidebar = ({ lists, onSelectList, onEdit, onDelete, onShare, onCreateNewLi
       </div>
     </div>
   );
+
 };
 
 export default Sidebar;
