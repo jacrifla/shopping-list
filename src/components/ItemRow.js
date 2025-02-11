@@ -102,6 +102,7 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
                                         : item.price)
                                 ).toFixed(2)}
                                 readOnly
+                                onChange={()=>{}}
                             />
                         </div>
                     </div>
