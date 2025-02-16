@@ -94,10 +94,15 @@ const List = {
         }
     },
 
-    markAsCompleted: async (listId, totalAmount) => {
-        if (!listId || totalAmount == null) {
-            throw new Error('ID da lista e o total da lista são obrigatórios');
+    markAsCompleted: async (listId, totalAmount, purchaseDate = null) => {
+        const userId = getUserId();
+
+        if (!listId || totalAmount == null || !userId) {
+            throw new Error('ID da lista, total da lista e ID do usuário são obrigatórios');
         }
+
+        // Se a data não for fornecida, usa a data atual
+        const dateToUse = purchaseDate || new Date().toISOString().split('T')[0];
 
         try {
             const response = await fetch(`${API_URL}/mark/${listId}`, {
@@ -105,7 +110,7 @@ const List = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ totalAmount }),
+                body: JSON.stringify({ totalAmount, userId, purchaseDate: dateToUse }),
             });
 
             const data = await response.json();
@@ -158,7 +163,7 @@ const List = {
             }
 
             const data = await response.json();
-            return data.data; // Retorna o token e expiresAt
+            return data.data;
         } catch (error) {
             console.error('Erro em generateShareToken:', error);
             throw error;

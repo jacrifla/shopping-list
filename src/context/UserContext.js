@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUserId } from '../services/authService';
+import { getAuthToken, getUserId } from '../services/authService';
 
 const UserContext = createContext();
 
@@ -10,7 +10,13 @@ export const UserProvider = ({ children }) => {
         const fetchUserId = () => {
             try {
                 const id = getUserId();
-                setUserId(id);
+                const token = getAuthToken();
+
+                if (id && token) {
+                    setUserId(id);
+                } else {
+                    setUserId(null);
+                }
             } catch (error) {
                 console.error("Erro ao obter o userId", error);
             }

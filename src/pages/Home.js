@@ -11,6 +11,7 @@ import listItemService from '../services/listItemService';
 import { getUserId } from '../services/authService';
 import ItemList from '../components/ItemList';
 import SelectItemDetailsModal from '../components/SelectItemDetailsModal ';
+import { convertToDatabaseDateFormat } from '../utils/functions';
 
 const Home = () => {
   const [lists, setLists] = useState([]);
@@ -121,12 +122,18 @@ const Home = () => {
     try {
       if (listToDelete) {
         await listService.deleteList(listToDelete);
-        setLists(lists.filter((list) => list.listId !== listToDelete));
-        showToastNotification('Lista excluída com sucesso!', 'success');
+
+        // Remover a lista do estado
+        setLists((prevLists) => prevLists.filter((list) => list.listId !== listToDelete));
+
+        // Remover os itens associados a essa lista
+        setSelectedListItems((prevItems) => prevItems.filter((item) => item.listId !== listToDelete));
+
+        showToastNotification("Lista excluída com sucesso!", "success");
         setListToDelete(null);
       }
     } catch (error) {
-      showToastNotification(`Erro ao excluir lista: ${error}`, 'danger');
+      showToastNotification(`Erro ao excluir lista: ${error.message}`, "danger");
     } finally {
       setShowItemConfirmModal(false);
     }
@@ -147,37 +154,53 @@ const Home = () => {
 
   const markAsBought = async (listId) => {
     try {
+      // Perguntar ao usuário a data da compra da lista
+      const userInputDate = prompt(
+        "Informe a data da compra da lista (DD/MM/YYYY):",
+        new Date().toLocaleDateString("pt-BR")
+      );
+
+      // Se o usuário cancelar ou deixar em branco, usar a data atual
+      const selectedDate = userInputDate ? convertToDatabaseDateFormat(userInputDate) : new Date().toISOString().split("T")[0];
+
       // Encontrar os itens selecionados para a lista pela ID
       const selectedItems = selectedListItems.filter((item) => item.listId === listId);
 
       if (selectedItems.length === 0) {
-        showToastNotification('Lista sem itens ou com dados inválidos.', 'danger');
+        showToastNotification("Lista sem itens ou com dados inválidos.", "danger");
         return;
       }
 
       // Calcular o total da lista somando os preços dos itens e multiplicando pela quantidade
-      const totalAmount = selectedItems.reduce((total, item) => total + (item.price * item.quantity || 0), 0);
+      const totalAmount = selectedItems.reduce(
+        (total, item) => total + (item.price * item.quantity || 0),
+        0
+      );
 
-      // Chamar o serviço para marcar a lista como concluída
-      const result = await listService.markAsCompleted(listId, totalAmount);
+      // Marcar a lista como concluída
+      const result = await listService.markAsCompleted(listId, totalAmount, selectedDate);
 
       if (result.status) {
-        setLists(lists.map((listItem) =>
-          listItem.listId === listId
-            ? {
-              ...listItem,
-              completedAt: result.data.completedAt,
-              totalAmount: result.data.totalAmount,
-            }
-            : listItem
-        ));
-        showToastNotification('Lista marcada como concluída!', 'success');
+        setLists((lists) =>
+          lists.map((listItem) =>
+            listItem.listId === listId
+              ? { ...listItem, completedAt: selectedDate, totalAmount: result.data.totalAmount }
+              : listItem
+          )
+        );
+        showToastNotification("Lista marcada como concluída!", "success");
+
+        // Perguntar ao usuário se deseja excluir a lista
+        setListToDelete(listId);
+        setConfirmAction('deleteList');
+        setShowItemConfirmModal(true);
+
       } else {
-        showToastNotification('Não foi possível marcar a lista como concluída.', 'danger');
+        showToastNotification("Não foi possível marcar a lista como concluída.", "danger");
       }
     } catch (error) {
-      console.error('Erro ao marcar a lista como concluída:', error.message);
-      showToastNotification(`Erro: ${error.message}`, 'danger');
+      console.error("Erro ao marcar a lista como concluída:", error.message);
+      showToastNotification(`Erro: ${error.message}`, "danger");
     }
   };
 
@@ -271,26 +294,70 @@ const Home = () => {
     }
   };
 
-  const handleMarkItemAsBought = async () => {
+  const handleMarkItemAsBought = async (newItemDetails) => {
     try {
-      await listItemService.markAsPurchased({
+      // Perguntar ao usuário a data da compra apenas uma vez
+      if (!window.selectedPurchaseDate) {
+        const userInputDate = prompt(
+          "Informe a data da compra (DD/MM/YYYY):",
+          new Date().toLocaleDateString("pt-BR")
+        );
+
+        // Se o usuário cancelar ou deixar em branco, usar a data atual
+        const finalDate = userInputDate ? convertToDatabaseDateFormat(userInputDate) : new Date().toISOString().split("T")[0];
+
+        window.selectedPurchaseDate = finalDate;
+      }
+
+      // Enviar os dados para o serviço de marcação de comprado
+      const result = await listItemService.markAsPurchased({
         itemListId: selectedItem.itemListId,
         userId: getUserId(),
-        categoryId: itemDetails.categoryId,
-        brandId: itemDetails.brandId,
-        barcode: itemDetails.barcode,
+        categoryId: newItemDetails.categoryId,
+        brandId: newItemDetails.brandId,
+        barcode: newItemDetails.barcode,
+        purchaseDate: window.selectedPurchaseDate,
       });
 
-      setSelectedListItems(selectedListItems.map(item =>
-        item.itemListId === selectedItem.itemListId
-          ? { ...item, purchasedAt: new Date().toISOString() }
-          : item
-      ));
+      // Caso a marcação não tenha sido bem-sucedida, desmarque o item e mostre erro
+      if (!result || !result.status) {
+        showToastNotification("Erro ao marcar item como comprado.", "danger");
+        return;
+      }
 
-      showToastNotification('Item marcado como comprado!', 'success');
+      // Atualizar os itens na lista para refletir a marcação de comprado
+      setSelectedListItems((prevItems) => {
+        const updatedItems = prevItems.map((item) =>
+          item.itemListId === selectedItem.itemListId
+            ? { ...item, purchasedAt: window.selectedPurchaseDate }
+            : item
+        );
+
+        // Verifica se todos os itens da lista foram comprados
+        const allItemsBought = updatedItems.every((item) => item.purchasedAt !== null);
+
+        if (allItemsBought) {
+          markAsBought(selectedItem.listId);
+        }
+
+        return updatedItems;
+      });
+
+      showToastNotification("Item marcado como comprado!", "success");
+
     } catch (error) {
-      console.error('Erro ao marcar item como comprado:', error);
-      showToastNotification('Erro ao marcar item como comprado.', 'danger');
+      console.error("Erro ao marcar item como comprado:", error);
+
+      // Desfazer a alteração na interface se houver erro
+      setSelectedListItems((prevItems) =>
+        prevItems.map((item) =>
+          item.itemListId === selectedItem.itemListId
+            ? { ...item, purchasedAt: null }
+            : item
+        )
+      );
+
+      showToastNotification("Erro ao marcar item como comprado.", "danger");
     }
   };
 
@@ -312,17 +379,19 @@ const Home = () => {
       return;
     }
 
+    // Atualizar os detalhes do item
     const newItemDetails = {
       categoryId: data?.categoryId || null,
       brandId: data?.brandId || null,
       barcode: data?.barcode || null,
     };
 
+    // Atualizando itemDetails com os novos dados
     setItemDetails(newItemDetails);
     setShowModal(false);
 
-    // Agora usamos o estado itemDetails dentro de handleMarkItemAsBought
-    handleMarkItemAsBought();
+    // Passando os dados mais recentes para a ação de marcar como comprado
+    handleMarkItemAsBought(newItemDetails);
   };
 
   const handleConfirmAction = (action) => {
@@ -472,8 +541,9 @@ const Home = () => {
 
       <SelectItemDetailsModal
         show={showModal}
-        onHide={() => setShowItemConfirmModal(false)}
+        onHide={() => setShowModal(false)}
         onSave={handleSaveItemDetails}
+        selectedItem={selectedItem}
       />
 
       <ConfirmModal

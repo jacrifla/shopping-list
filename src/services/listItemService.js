@@ -3,7 +3,7 @@ const API_URL = `${URL_BASE}/list-item`;
 
 const ListItem = {
     creatListItem: async (itemData) => {
-        
+
         try {
             const response = await fetch(`${API_URL}`, {
                 method: "POST",
@@ -13,7 +13,7 @@ const ListItem = {
                 body: JSON.stringify(itemData),
             });
             const result = await response.json();
-            
+
             return result.data;
         } catch (error) {
             console.error("Erro ao criar item:", error);
@@ -63,20 +63,28 @@ const ListItem = {
         }
     },
 
-    markAsPurchased: async ({ itemListId, userId, categoryId, brandId, barcode }) => {
+    markAsPurchased: async ({ itemListId, userId, categoryId, brandId, barcode, purchaseDate }) => {
         try {
             const response = await fetch(`${API_URL}/purchase`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ itemListId, userId, categoryId, brandId, barcode }),
+                body: JSON.stringify({
+                    itemListId,
+                    userId,
+                    categoryId,
+                    brandId,
+                    barcode,
+                    purchaseDate: purchaseDate
+                }),
             });
+
             const result = await response.json();
             return result;
         } catch (error) {
-            console.error("Erro ao marcar item como comprado:", error);
-            throw error;
+            console.error("Erro ao marcar item como comprado:", error.message);
+            throw error.message;
         }
     },
 };

@@ -6,7 +6,7 @@ import Select from './Select';
 import Input from './Input';
 import Button from './Button';
 
-const SelectItemDetailsModal = ({ show, onHide, onSave }) => {
+const SelectItemDetailsModal = ({ show, onHide, onSave, selectedItem }) => {
   const [categoryId, setCategoryId] = useState(null);
   const [brandId, setBrandId] = useState(null);
   const [barcode, setBarcode] = useState('');
@@ -29,12 +29,18 @@ const SelectItemDetailsModal = ({ show, onHide, onSave }) => {
 
     if (show) {
       loadCategoriesAndBrands();
+      if (selectedItem) {
+        setCategoryId(selectedItem.categoryId || null);
+        setBrandId(selectedItem.brandId || null);
+        setBarcode(selectedItem.barcode || '');
+      }
     } else {
+      // Resetando os valores para o estado inicial quando o modal é fechado
       setCategoryId(null);
       setBrandId(null);
       setBarcode('');
     }
-  }, [show]);
+  }, [show, selectedItem]);
 
   const handleSave = () => {
     onSave({ categoryId, brandId, barcode });
@@ -44,7 +50,9 @@ const SelectItemDetailsModal = ({ show, onHide, onSave }) => {
   return (
     <Modal show={show} onHide={onHide} centered dialogClassName="border-0">
       <Modal.Header closeButton className="border-0 shadow-none">
-        <Modal.Title className="fw-bold">Detalhes do Item</Modal.Title>
+        <Modal.Title className="fw-bold">
+          Detalhes do Item {selectedItem ? ` : ${selectedItem.itemName}` : ''}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
