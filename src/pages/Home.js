@@ -294,66 +294,77 @@ const Home = () => {
     }
   };
 
-  const handleMarkItemAsBought = async (newItemDetails) => {
+  const handleMarkItemAsBought = async (item, newItemDetails) => {
     try {
-      // Perguntar ao usuário a data da compra apenas uma vez
       if (!window.selectedPurchaseDate) {
         const userInputDate = prompt(
           "Informe a data da compra (DD/MM/YYYY):",
           new Date().toLocaleDateString("pt-BR")
         );
 
-        // Se o usuário cancelar ou deixar em branco, usar a data atual
-        const finalDate = userInputDate ? convertToDatabaseDateFormat(userInputDate) : new Date().toISOString().split("T")[0];
+        const finalDate = userInputDate
+          ? convertToDatabaseDateFormat(userInputDate)
+          : new Date().toISOString().split("T")[0];
 
         window.selectedPurchaseDate = finalDate;
       }
 
-      // Enviar os dados para o serviço de marcação de comprado
+      // Verifica se os detalhes do item estão completos antes de enviar
+      if (item.itemType !== "common") {
+        if (!newItemDetails || !newItemDetails.categoryId || !newItemDetails.brandId || !newItemDetails.barcode) {
+          showToastNotification("Por favor, preencha todos os detalhes do item.", "warning");
+          return;
+        }
+      }
+
+      // Enviar os dados para marcar como comprado
       const result = await listItemService.markAsPurchased({
-        itemListId: selectedItem.itemListId,
+        itemListId: item.itemListId,
+        itemId: item.itemId,
         userId: getUserId(),
-        categoryId: newItemDetails.categoryId,
-        brandId: newItemDetails.brandId,
-        barcode: newItemDetails.barcode,
+        categoryId: newItemDetails?.categoryId || null,
+        brandId: newItemDetails?.brandId || null,
+        barcode: newItemDetails?.barcode || null,
         purchaseDate: window.selectedPurchaseDate,
       });
 
-      // Caso a marcação não tenha sido bem-sucedida, desmarque o item e mostre erro
       if (!result || !result.status) {
         showToastNotification("Erro ao marcar item como comprado.", "danger");
         return;
       }
 
-      // Atualizar os itens na lista para refletir a marcação de comprado
+      // Atualiza a lista com a informação de comprado
       setSelectedListItems((prevItems) => {
-        const updatedItems = prevItems.map((item) =>
-          item.itemListId === selectedItem.itemListId
-            ? { ...item, purchasedAt: window.selectedPurchaseDate }
-            : item
+        const updatedItems = prevItems.map((listItem) =>
+          listItem.itemListId === item.itemListId
+            ? { ...listItem, purchasedAt: window.selectedPurchaseDate }
+            : listItem
         );
 
-        // Verifica se todos os itens da lista foram comprados
-        const allItemsBought = updatedItems.every((item) => item.purchasedAt !== null);
-
+        // Se todos os itens foram comprados, perguntar se quer marcar a lista toda
+        const allItemsBought = updatedItems.every((listItem) => listItem.purchasedAt !== null);
         if (allItemsBought) {
-          markAsBought(selectedItem.listId);
+          const confirmMarkList = window.confirm(
+            "Todos os itens foram comprados. Deseja marcar a lista inteira como comprada?"
+          );
+
+          if (confirmMarkList) {
+            markAsBought(item.listId);
+          }
         }
 
         return updatedItems;
       });
 
       showToastNotification("Item marcado como comprado!", "success");
-
     } catch (error) {
       console.error("Erro ao marcar item como comprado:", error);
 
-      // Desfazer a alteração na interface se houver erro
       setSelectedListItems((prevItems) =>
-        prevItems.map((item) =>
-          item.itemListId === selectedItem.itemListId
-            ? { ...item, purchasedAt: null }
-            : item
+        prevItems.map((listItem) =>
+          listItem.itemListId === item.itemListId
+            ? { ...listItem, purchasedAt: null }
+            : listItem
         )
       );
 
@@ -362,15 +373,22 @@ const Home = () => {
   };
 
   const handleAskForItemDetails = (itemId) => {
-    const item = selectedListItems.find(item => item.itemListId === itemId);
+    const item = selectedListItems.find((item) => item.itemListId === itemId);
     if (!item) {
       console.error("Item não encontrado.");
       return;
     }
 
     setSelectedItem(item);
-    setConfirmAction('markAsBought');
-    setShowItemConfirmModal(true);
+
+    if (item.itemType === "common") {
+      // Se for "common", já marca como comprado sem abrir modal
+      handleMarkItemAsBought(item, { categoryId: null, brandId: null, barcode: null });
+    } else {
+      // Caso contrário, pede os detalhes
+      setConfirmAction("markAsBought");
+      setShowItemConfirmModal(true);
+    }
   };
 
   const handleSaveItemDetails = (data) => {
@@ -379,19 +397,18 @@ const Home = () => {
       return;
     }
 
-    // Atualizar os detalhes do item
+    // Garantindo que os detalhes do item estão sempre sendo passados corretamente
     const newItemDetails = {
-      categoryId: data?.categoryId || null,
-      brandId: data?.brandId || null,
-      barcode: data?.barcode || null,
+      categoryId: data?.categoryId || selectedItem.categoryId || null,
+      brandId: data?.brandId || selectedItem.brandId || null,
+      barcode: data?.barcode || selectedItem.barcode || null,
     };
 
-    // Atualizando itemDetails com os novos dados
     setItemDetails(newItemDetails);
     setShowModal(false);
 
-    // Passando os dados mais recentes para a ação de marcar como comprado
-    handleMarkItemAsBought(newItemDetails);
+    // Chamando a função de marcação de comprado com os detalhes corretos
+    handleMarkItemAsBought(selectedItem, newItemDetails);
   };
 
   const handleConfirmAction = (action) => {

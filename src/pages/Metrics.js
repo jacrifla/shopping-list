@@ -4,7 +4,6 @@ import Title from '../components/Title';
 import purchaseService from '../services/purchaseService';
 import { formatToISODate } from '../utils/functions';
 import Input from '../components/Input';
-import Subtitle from '../components/Subtitle';
 
 const Metrics = () => {
     const [startDate, setStartDate] = useState('');
@@ -90,8 +89,9 @@ const Metrics = () => {
                 }
 
                 const comparisonSpentData = await purchaseService.getComparisonSpent(startDate, endDate);
-                if (comparisonSpentData.success) {
-                    setComparisonSpent(comparisonSpentData.comparisonSpent);
+                if (comparisonSpentData.status) {
+                    setComparisonSpent(comparisonSpentData.data);
+
                 } else {
                     setError(comparisonSpentData.message);
                 }
@@ -147,9 +147,12 @@ const Metrics = () => {
                 <div className="row">
                     {/* Total Gasto */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-primary">
+                        <div className="card shadow-lg border-primary">
+                            <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Total Gasto</h5>
+                                <i className="bi bi-cash fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Total Gasto'} icon={'cash'} iconClassName='text-primary fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -163,40 +166,14 @@ const Metrics = () => {
                         </div>
                     </div>
 
-                    {/* Itens Mais Comprados */}
-                    <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-success">
-                            <div className="card-body">
-                                <Subtitle text={'Itens Mais Comprados'} icon={'basket'} iconClassName='text-success fs-3 ' />
-                                {loading ? (
-                                    <div className="spinner-border text-success" role="status">
-                                        <span className="visually-hidden">Carregando...</span>
-                                    </div>
-                                ) : mostPurchased.length > 0 ? (
-                                    <ul className="list-group">
-                                        {mostPurchased.map((item, index) => {
-                                            return (
-                                                <li className="list-group-item d-flex justify-content-between" key={index}>
-                                                    <span>{item.name}</span>
-                                                    <span className="badge bg-success">
-                                                        {item.quantity && !isNaN(item.quantity) ? `${item.quantity} unidades` : 'Indefinido'}
-                                                    </span>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                ) : (
-                                    <p className="card-text">Sem dados</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
                     {/* Total de Itens Comprados */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-warning">
+                        <div className="card shadow-lg border-warning">
+                            <div className="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Total de Itens Comprados</h5>
+                                <i className="bi bi-cart-check fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Total de Itens Comprados'} icon={'cart-check'} iconClassName='text-warning fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-warning" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -212,9 +189,12 @@ const Metrics = () => {
 
                     {/* Gasto Médio por Compra */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-info">
+                        <div className="card shadow-lg border-info">
+                            <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Gasto Médio por Compra</h5>
+                                <i className="bi bi-wallet2 fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Gasto Médio por Compra'} icon={'wallet2'} iconClassName='text-info fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-info" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -230,9 +210,12 @@ const Metrics = () => {
 
                     {/* Maior Compra */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-danger">
+                        <div className="card shadow-lg border-danger">
+                            <div className="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Maior Gasto de um Item</h5>
+                                <i className="bi bi-cash-coin fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Maior Gasto de um Item'} icon={'cash-coin'} iconClassName='text-danger fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-danger" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -248,9 +231,12 @@ const Metrics = () => {
 
                     {/* Gasto Diário Médio */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-dark">
+                        <div className="card shadow-lg border-dark">
+                            <div className="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Gasto Diário Médio</h5>
+                                <i className="bi bi-calendar-day fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Gasto Diário Médio'} icon={'calendar-day'} iconClassName='text-dark fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-dark" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -264,11 +250,48 @@ const Metrics = () => {
                         </div>
                     </div>
 
+                    {/* Itens Mais Comprados */}
+                    <div className="col-12 col-md-4 mb-4">
+                        <div className="card shadow-lg border-success">
+                            <div className="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Itens Mais Comprados</h5>
+                                <i className="bi bi-basket fs-3"></i>
+                            </div>
+                            <div className="card-body">
+                                {loading ? (
+                                    <div className="spinner-border text-success" role="status">
+                                        <span className="visually-hidden">Carregando...</span>
+                                    </div>
+                                ) : mostPurchased.length > 0 ? (
+                                    <ul className="list-group">
+                                        {mostPurchased.map((item, index) => {
+                                            const isKg = item.quantity && (item.quantity.toString().includes('.') || item.quantity.toString().includes(','));
+                                            const unit = isKg ? 'kg' : 'unidades';
+                                            return (
+                                                <li className="list-group-item d-flex justify-content-between" key={index}>
+                                                    <span>{item.name}</span>
+                                                    <span className="badge bg-success">
+                                                        {item.quantity && !isNaN(item.quantity) ? `${item.quantity} ${unit}` : 'Indefinido'}
+                                                    </span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                ) : (
+                                    <p className="card-text">Sem dados</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Categorias de Compras */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-primary">
+                        <div className="card shadow-lg border-primary">
+                            <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Categorias de Compras</h5>
+                                <i className="bi bi-tags fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Categorias de Compras'} icon={'tags'} iconClassName='text-primary fs-3 ' />
                                 {loading ? (
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Carregando...</span>
@@ -283,28 +306,7 @@ const Metrics = () => {
                                                 </span>
                                             </li>
                                         ))}
-
                                     </ul>
-                                ) : (
-                                    <p className="card-text">Sem dados</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Comparação de Gastos */}
-                    <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-primary">
-                            <div className="card-body">
-                                <Subtitle text={'Comparação de Gastos'} icon={'bar-chart-line'} iconClassName='text-primary fs-3 ' />
-                                {loading ? (
-                                    <div className="spinner-border text-primary" role="status">
-                                        <span className="visually-hidden">Carregando...</span>
-                                    </div>
-                                ) : comparisonSpent !== null ? (
-                                    <p className="card-text fs-5">
-                                        {comparisonSpent !== null ? `R$ ${comparisonSpent.toFixed(2)}` : 'Sem dados'}
-                                    </p>
                                 ) : (
                                     <p className="card-text">Sem dados</p>
                                 )}
@@ -314,27 +316,79 @@ const Metrics = () => {
 
                     {/* Top Itens por Valor */}
                     <div className="col-12 col-md-4 mb-4">
-                        <div className="card shadow-sm border-warning">
+                        <div className="card shadow-lg border-warning">
+                            <div className="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Top Itens por Valor</h5>
+                                <i className="bi bi-box fs-3"></i>
+                            </div>
                             <div className="card-body">
-                                <Subtitle text={'Top Itens por Valo'} icon={'box'} iconClassName='text-warning fs-3 ' />
                                 {loading ? (
-                                    <div className="spinner-border text-warning" role="status">
-                                        <span className="visually-hidden">Carregando...</span>
+                                    <div className="d-flex justify-content-center">
+                                        <div className="spinner-border text-warning" role="status">
+                                            <span className="visually-hidden">Carregando...</span>
+                                        </div>
                                     </div>
                                 ) : topItemsByValue.length > 0 ? (
-                                    <ul className="list-group">
+                                    <div>
                                         {topItemsByValue.map((item, index) => (
-                                            <li className="list-group-item d-flex justify-content-between" key={index}>
-                                                <span>{item.itemName}</span>
-                                                <span className="badge bg-warning">
-                                                    {item.totalValue ? `R$ ${item.totalValue.toFixed(2)}` : 'R$ 0.00'}
-                                                </span>
-                                            </li>
+                                            <div key={index} className="mb-3 p-3 border rounded-3 shadow-sm bg-light">
+                                                <h6 className="fw-bold">{item.itemName}</h6>
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                    <span>
+                                                        <strong>Valor Total:</strong>
+                                                        {item.totalValue ? `R$ ${item.totalValue.toFixed(2)}` : 'R$ 0.00'}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         ))}
-
-                                    </ul>
+                                    </div>
                                 ) : (
-                                    <p className="card-text">Sem dados</p>
+                                    <p className="card-text text-center">Sem dados</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Comparação de Gastos */}
+                    <div className="col-12 col-md-6 col-lg-4 mb-4">
+                        <div className="card shadow-lg border-primary">
+                            <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">Comparação de Gastos</h5>
+                                <i className="bi bi-bar-chart-line fs-3"></i>
+                            </div>
+                            <div className="card-body">
+                                {loading ? (
+                                    <div className="d-flex justify-content-center">
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Carregando...</span>
+                                        </div>
+                                    </div>
+                                ) : comparisonSpent && comparisonSpent.length > 0 ? (
+                                    <div>
+                                        {comparisonSpent.map((item, index) => (
+                                            <div key={index} className="mb-3 p-3 border rounded-3 shadow-sm bg-light">
+                                                <h6 className="fw-bold">{item.itemName}</h6>
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                    <span className="text-muted">
+                                                        <strong>Preço:</strong>
+                                                        {`R$ ${parseFloat(item.minPrice).toFixed(2)} - R$ ${parseFloat(item.maxPrice).toFixed(2)}`}
+                                                    </span>
+                                                </div>
+                                                <div className="d-flex justify-content-between mt-2">
+                                                    <div>
+                                                        <small className="text-primary"><strong>Menor Preço:</strong></small>
+                                                        <p className="mb-0">{new Date(item.minPriceDate).toLocaleDateString()}</p>
+                                                    </div>
+                                                    <div>
+                                                        <small className="text-danger"><strong>Maior Preço:</strong></small>
+                                                        <p className="mb-0">{new Date(item.maxPriceDate).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="card-text text-center">Sem dados</p>
                                 )}
                             </div>
                         </div>
@@ -343,6 +397,7 @@ const Metrics = () => {
             </div>
         </>
     );
+
 };
 
 export default Metrics;

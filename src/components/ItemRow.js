@@ -94,15 +94,17 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
                                 type="text"
                                 className="form-control-plaintext text-center"
                                 value={(
-                                    (editingItemId === item.itemListId
-                                        ? (editingItem?.quantity || item.quantity)
-                                        : item.quantity) *
-                                    (editingItemId === item.itemListId
-                                        ? (editingItem?.price || item.price)
-                                        : item.price)
+                                    Math.ceil(
+                                        ((editingItemId === item.itemListId
+                                            ? (editingItem?.quantity || item.quantity)
+                                            : item.quantity) *
+                                            (editingItemId === item.itemListId
+                                                ? (editingItem?.price || item.price)
+                                                : item.price)) * 100
+                                    ) / 100
                                 ).toFixed(2)}
                                 readOnly
-                                onChange={()=>{}}
+                                onChange={() => { }}
                             />
                         </div>
                     </div>
@@ -111,12 +113,12 @@ const ItemRow = ({ item, onEdit, onDelete, onAskDetails, index }) => {
                     <div className="mb-3">
                         {editingItemId === item.itemListId ? (
                             <div className="d-flex gap-3 w-100">
-                                <Button 
+                                <Button
                                     className="btn btn-success w-100"
                                     onClick={() => handleSaveEditing(item.itemListId)}
                                     icon={'floppy-fill'}
                                 />
-                                <Button 
+                                <Button
                                     className="btn btn-secondary w-100"
                                     onClick={handleCancelEditing}
                                     icon={'x-lg'}

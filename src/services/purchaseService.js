@@ -31,9 +31,9 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/total-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
-            
+
             if (response.ok) {
-                return { success: true, totalSpent: parseFloat(data.data) };
+                return { success: true, totalSpent: parseFloat(data.data.totalSpent) };
             } else {
                 throw new Error(data.error);
             }
@@ -47,7 +47,7 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/most-purchased?userId=${userId}&limit=${limit}`);
             const data = await response.json();
-            
+
             if (response.ok) {
                 return {
                     success: true,
@@ -69,8 +69,9 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/items-purchased?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
+
             if (response.ok) {
-                return { success: true, itemsPurchased: parseInt(data.data, 10) }; // Converte string para número
+                return { success: true, itemsPurchased: parseInt(data.data.totalQuantity, 10) };
             } else {
                 throw new Error(data.error);
             }
@@ -84,9 +85,9 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/avg-spend-per-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
-            
+
             if (response.ok) {
-                return { success: true, avgSpendPerPurchase: parseFloat(data.data) };
+                return { success: true, avgSpendPerPurchase: parseFloat(data.data.avgSpendPerPurchase) };
             } else {
                 throw new Error(data.error);
             }
@@ -100,7 +101,7 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/largest-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
-            
+
             if (response.ok) {
                 return { success: true, largestPurchase: parseFloat(data.data) };
             } else {
@@ -116,9 +117,9 @@ const Purchase = {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/avg-daily-spend?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
             const data = await response.json();
-            
+
             if (response.ok) {
-                return { success: true, avgDailySpend: parseFloat(data.data) };
+                return { success: true, avgDailySpend: parseFloat(data.data.avgDailySpend) };
             } else {
                 throw new Error(data.error);
             }
@@ -131,12 +132,12 @@ const Purchase = {
         try {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/category-purchases?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();           
-            
+            const data = await response.json();
+
             if (response.ok) {
-                return { 
-                    success: true, 
-                    categoryPurchases: data.data 
+                return {
+                    success: true,
+                    categoryPurchases: data.data
                 };
             } else {
                 throw new Error(data.error);
@@ -150,12 +151,12 @@ const Purchase = {
         try {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/comparison-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
-            
-            if (response.ok) {
-                return { success: true, comparisonSpent: parseFloat(data.data) };
+            const responseData = await response.json();
+
+            if (response.ok && responseData && responseData.data.length > 0) {
+                return responseData;
             } else {
-                throw new Error(data.error);
+                throw new Error(responseData.error || "Erro desconhecido");
             }
         } catch (error) {
             throw new Error(error.message);
@@ -166,8 +167,8 @@ const Purchase = {
         try {
             const userId = getUserId();
             const response = await fetch(`${API_URL}/top-items-by-value?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();            
-            
+            const data = await response.json();
+
             if (response.ok) {
                 return { success: true, topItemsByValue: data.data };
             } else {
