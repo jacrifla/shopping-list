@@ -311,8 +311,8 @@ const Home = () => {
 
       // Verifica se os detalhes do item estão completos antes de enviar
       if (item.itemType !== "common") {
-        if (!newItemDetails || !newItemDetails.categoryId || !newItemDetails.brandId || !newItemDetails.barcode) {
-          showToastNotification("Por favor, preencha todos os detalhes do item.", "warning");
+        if (!newItemDetails || (!newItemDetails.categoryId && !newItemDetails.brandId && !newItemDetails.barcode)) {
+          showToastNotification("Por favor, preencha pelo menos um detalhe do item.", "warning");
           return;
         }
       }
