@@ -15,6 +15,7 @@ const AddItemModal = ({ showModal, onClose, onSaveItem, itemInputs, handleAddInp
                     <div className="modal-body">
                         <div className="mb-3">
                             <Input
+                                label="Nome do Item"
                                 name="name"
                                 value={itemInputs.name}
                                 onChange={handleAddInputChange}
@@ -33,6 +34,7 @@ const AddItemModal = ({ showModal, onClose, onSaveItem, itemInputs, handleAddInp
                         </div>
                         <div className="mb-3">
                             <Input
+                                label="Quantidade"
                                 name="quantity"
                                 type="number"
                                 value={itemInputs.quantity}
@@ -43,6 +45,7 @@ const AddItemModal = ({ showModal, onClose, onSaveItem, itemInputs, handleAddInp
                         </div>
                         <div className="mb-3">
                             <Input
+                                label="Preço Unitário"
                                 name="price"
                                 type="number"
                                 value={itemInputs.price}
