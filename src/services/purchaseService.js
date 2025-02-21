@@ -139,6 +139,7 @@ const Purchase = {
                     success: true,
                     categoryPurchases: data.data
                 };
+                
             } else {
                 throw new Error(data.error);
             }
@@ -147,10 +148,10 @@ const Purchase = {
         }
     },
 
-    getComparisonSpent: async (startDate, endDate) => {
+    getComparisonSpent: async (startDate, endDate, limit, offset) => {
         try {
             const userId = getUserId();
-            const response = await fetch(`${API_URL}/comparison-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
+            const response = await fetch(`${API_URL}/comparison-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}&limit=${limit}&offset=${offset}`);
             const responseData = await response.json();
 
             if (response.ok && responseData && responseData.data.length > 0) {
