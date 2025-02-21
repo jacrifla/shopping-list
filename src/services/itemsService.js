@@ -1,16 +1,18 @@
 import { URL_BASE } from "../utils/base";
+import { getUserId } from "./authService";
 
 const API_URL = `${URL_BASE}/items`;
 
 const ItemsService = {
     createItem: async (name, categoryId, brandId, barcode) => {
+        const userId = getUserId();
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, categoryId, brandId, barcode }),
+                body: JSON.stringify({ name, categoryId, brandId, barcode, userId }),
             });
             const result = await response.json();
             if (response.ok) {
@@ -24,13 +26,14 @@ const ItemsService = {
     },
 
     updateItem: async (itemId, name, categoryId, brandId, barcode) => {
+        const updatedBy = getUserId();
         try {
             const response = await fetch(`${API_URL}/${itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, categoryId, brandId, barcode }),
+                body: JSON.stringify({ name, categoryId, brandId, barcode, updatedBy }),
             });
             const result = await response.json();
             if (response.ok) {
