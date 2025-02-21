@@ -151,6 +151,7 @@ const Metrics = () => {
                         loading={comparisonLoading}
                         error={comparisonError}
                         loadMore={loadMore}
+                        limit={limit}
                     />
                 </div>
             </div>

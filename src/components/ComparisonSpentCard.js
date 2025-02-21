@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ComparisonSpentCard = ({ title, items, loading, error, loadMore }) => (
+const ComparisonSpentCard = ({ title, items, loading, error, loadMore, limit }) => (
     <div className="col-12 col-md-6 col-lg-4 mb-4">
         <div className="card shadow-lg border-primary">
             <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -37,15 +37,18 @@ const ComparisonSpentCard = ({ title, items, loading, error, loadMore }) => (
                                 </div>
                             </div>
                         ))}
-                        <div className="text-center mt-4">
-                            <button
-                                onClick={loadMore}
-                                className="btn btn-primary"
-                                disabled={loading || items.length === 0}
-                            >
-                                {loading ? "Carregando..." : "Carregar Mais"}
-                            </button>
-                        </div>
+                        {/* Mostrar o botão "Carregar Mais" apenas se houver mais dados */}
+                        {items.length >= limit && (
+                            <div className="text-center mt-4">
+                                <button
+                                    onClick={loadMore}
+                                    className="btn btn-primary"
+                                    disabled={loading}
+                                >
+                                    {loading ? "Carregando..." : "Carregar Mais"}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <p className="card-text text-center">Sem dados</p>

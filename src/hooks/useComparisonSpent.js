@@ -15,7 +15,13 @@ const useComparisonSpent = (startDate, endDate, page, limit) => {
                 const comparisonSpentData = await purchaseService.getComparisonSpent(startDate, endDate, limit, offset);
 
                 if (comparisonSpentData.status) {
-                    setComparisonSpent(prevItems => [...prevItems, ...comparisonSpentData.data]);
+                    // Se for a página 1, substitua os dados existentes
+                    if (page === 1) {
+                        setComparisonSpent(comparisonSpentData.data);
+                    } else {
+                        // Caso contrário, adicione os novos dados aos existentes
+                        setComparisonSpent(prevItems => [...prevItems, ...comparisonSpentData.data]);
+                    }
                 } else {
                     setError(comparisonSpentData.error || "Erro ao carregar dados.");
                 }
