@@ -107,14 +107,13 @@ const ItemList = ({ listName, items, listId, onEdit, onDelete, onAddNewItem, onA
 
             <Button
                 icon="plus-lg"
-                className="btn-outline-success position-fixed end-0 m-3 shadow "
-                style={{ bottom: "5em", right: "10px", width: "3em", height: "3em" }}
+                className="btn-outline-success position-fixed shadow btn-add-item"
                 onClick={() => setShowModal(true)}
             />
 
             <AddItemModal
                 showModal={showModal}
-                onClose={() =>{
+                onClose={() => {
                     setShowModal(false)
                     clearInputFields()
                 }}

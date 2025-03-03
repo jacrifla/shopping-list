@@ -35,7 +35,7 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [confirmAction, setConfirmAction] = useState(null);
-  const [itemDetails, setItemDetails] = useState({
+  const [, setItemDetails] = useState({
     categoryId: null,
     brandId: null,
     barcode: null,
@@ -307,14 +307,6 @@ const Home = () => {
           : new Date().toISOString().split("T")[0];
 
         window.selectedPurchaseDate = finalDate;
-      }
-
-      // Verifica se os detalhes do item estão completos antes de enviar
-      if (item.itemType !== "common") {
-        if (!newItemDetails || (!newItemDetails.categoryId && !newItemDetails.brandId && !newItemDetails.barcode)) {
-          showToastNotification("Por favor, preencha pelo menos um detalhe do item.", "warning");
-          return;
-        }
       }
 
       // Enviar os dados para marcar como comprado

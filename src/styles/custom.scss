@@ -314,3 +314,16 @@ input.text-primary {
       }
   }
 }
+
+.btn-add-item {
+  width: 3em;
+  height: 3em;
+  bottom: 6em;
+  right: 15px;
+
+  @media (min-width: 992px) {
+    top: 7em;
+    bottom: auto;
+    right: 20em;
+  }
+}
