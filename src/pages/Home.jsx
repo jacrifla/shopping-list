@@ -60,7 +60,6 @@ const Home = () => {
         }
         const response = await listItemService.getItemsByListId(selectedList);
         setSelectedListItems(response.data);
-
       } catch (error) {
         console.error('Erro ao carregar itens da lista', error);
         showToastNotification('Erro ao carregar itens da lista.', 'danger');
@@ -81,7 +80,10 @@ const Home = () => {
   const handleCreateList = async () => {
     try {
       if (newListName.trim() === '') {
-        showToastNotification('O nome da lista não pode estar vazio.', 'danger');
+        showToastNotification(
+          'O nome da lista não pode estar vazio.',
+          'danger'
+        );
         return;
       }
       const newList = await listService.createList(newListName);
@@ -96,10 +98,17 @@ const Home = () => {
 
   const saveUpdatedListName = async (newListName) => {
     try {
-      const updatedList = await listService.updateList(listIdToEdit, newListName);
-      setLists(lists.map((list) =>
-        list.listId === listIdToEdit ? { ...list, listName: updatedList.listName } : list
-      ));
+      const updatedList = await listService.updateList(
+        listIdToEdit,
+        newListName
+      );
+      setLists(
+        lists.map((list) =>
+          list.listId === listIdToEdit
+            ? { ...list, listName: updatedList.listName }
+            : list
+        )
+      );
       showToastNotification('Lista editada com sucesso!', 'success');
     } catch (error) {
       showToastNotification(`Erro ao editar lista: ${error}`, 'danger');
@@ -124,16 +133,23 @@ const Home = () => {
         await listService.deleteList(listToDelete);
 
         // Remover a lista do estado
-        setLists((prevLists) => prevLists.filter((list) => list.listId !== listToDelete));
+        setLists((prevLists) =>
+          prevLists.filter((list) => list.listId !== listToDelete)
+        );
 
         // Remover os itens associados a essa lista
-        setSelectedListItems((prevItems) => prevItems.filter((item) => item.listId !== listToDelete));
+        setSelectedListItems((prevItems) =>
+          prevItems.filter((item) => item.listId !== listToDelete)
+        );
 
-        showToastNotification("Lista excluída com sucesso!", "success");
+        showToastNotification('Lista excluída com sucesso!', 'success');
         setListToDelete(null);
       }
     } catch (error) {
-      showToastNotification(`Erro ao excluir lista: ${error.message}`, "danger");
+      showToastNotification(
+        `Erro ao excluir lista: ${error.message}`,
+        'danger'
+      );
     } finally {
       setShowItemConfirmModal(false);
     }
@@ -148,7 +164,10 @@ const Home = () => {
       setShowShareModal(true);
       showToastNotification('Token gerado com sucesso!', 'success');
     } catch (error) {
-      showToastNotification('Erro ao gerar token de compartilhamento.', 'danger');
+      showToastNotification(
+        'Erro ao gerar token de compartilhamento.',
+        'danger'
+      );
     }
   };
 
@@ -156,18 +175,25 @@ const Home = () => {
     try {
       // Perguntar ao usuário a data da compra da lista
       const userInputDate = prompt(
-        "Informe a data da compra da lista (DD/MM/YYYY):",
-        new Date().toLocaleDateString("pt-BR")
+        'Informe a data da compra da lista (DD/MM/YYYY):',
+        new Date().toLocaleDateString('pt-BR')
       );
 
       // Se o usuário cancelar ou deixar em branco, usar a data atual
-      const selectedDate = userInputDate ? convertToDatabaseDateFormat(userInputDate) : new Date().toISOString().split("T")[0];
+      const selectedDate = userInputDate
+        ? convertToDatabaseDateFormat(userInputDate)
+        : new Date().toISOString().split('T')[0];
 
       // Encontrar os itens selecionados para a lista pela ID
-      const selectedItems = selectedListItems.filter((item) => item.listId === listId);
+      const selectedItems = selectedListItems.filter(
+        (item) => item.listId === listId
+      );
 
       if (selectedItems.length === 0) {
-        showToastNotification("Lista sem itens ou com dados inválidos.", "danger");
+        showToastNotification(
+          'Lista sem itens ou com dados inválidos.',
+          'danger'
+        );
         return;
       }
 
@@ -178,29 +204,39 @@ const Home = () => {
       );
 
       // Marcar a lista como concluída
-      const result = await listService.markAsCompleted(listId, totalAmount, selectedDate);
+      const result = await listService.markAsCompleted(
+        listId,
+        totalAmount,
+        selectedDate
+      );
 
       if (result.status) {
         setLists((lists) =>
           lists.map((listItem) =>
             listItem.listId === listId
-              ? { ...listItem, completedAt: selectedDate, totalAmount: result.data.totalAmount }
+              ? {
+                  ...listItem,
+                  completedAt: selectedDate,
+                  totalAmount: result.data.totalAmount,
+                }
               : listItem
           )
         );
-        showToastNotification("Lista marcada como concluída!", "success");
+        showToastNotification('Lista marcada como concluída!', 'success');
 
         // Perguntar ao usuário se deseja excluir a lista
         setListToDelete(listId);
         setConfirmAction('deleteList');
         setShowItemConfirmModal(true);
-
       } else {
-        showToastNotification("Não foi possível marcar a lista como concluída.", "danger");
+        showToastNotification(
+          'Não foi possível marcar a lista como concluída.',
+          'danger'
+        );
       }
     } catch (error) {
-      console.error("Erro ao marcar a lista como concluída:", error.message);
-      showToastNotification(`Erro: ${error.message}`, "danger");
+      console.error('Erro ao marcar a lista como concluída:', error.message);
+      showToastNotification(`Erro: ${error.message}`, 'danger');
     }
   };
 
@@ -224,7 +260,7 @@ const Home = () => {
   const handleAddNewItem = async (newItem) => {
     // Certifique-se de que listId está sendo passado corretamente
     if (!newItem.listId) {
-      console.error("listId não foi fornecido.");
+      console.error('listId não foi fornecido.');
       return;
     }
 
@@ -283,7 +319,9 @@ const Home = () => {
     try {
       if (itemToDelete) {
         await listItemService.deleteListItem(itemToDelete);
-        setSelectedListItems(selectedListItems.filter(item => item.itemListId !== itemToDelete));
+        setSelectedListItems(
+          selectedListItems.filter((item) => item.itemListId !== itemToDelete)
+        );
         showToastNotification('Item excluído com sucesso!', 'success');
         setItemToDelete(null);
       }
@@ -298,13 +336,13 @@ const Home = () => {
     try {
       if (!window.selectedPurchaseDate) {
         const userInputDate = prompt(
-          "Informe a data da compra (DD/MM/YYYY):",
-          new Date().toLocaleDateString("pt-BR")
+          'Informe a data da compra (DD/MM/YYYY):',
+          new Date().toLocaleDateString('pt-BR')
         );
 
         const finalDate = userInputDate
           ? convertToDatabaseDateFormat(userInputDate)
-          : new Date().toISOString().split("T")[0];
+          : new Date().toISOString().split('T')[0];
 
         window.selectedPurchaseDate = finalDate;
       }
@@ -318,10 +356,11 @@ const Home = () => {
         brandId: newItemDetails?.brandId || null,
         barcode: newItemDetails?.barcode || null,
         purchaseDate: window.selectedPurchaseDate,
+        marketId: newItemDetails.marketId,
       });
 
       if (!result || !result.status) {
-        showToastNotification("Erro ao marcar item como comprado.", "danger");
+        showToastNotification('Erro ao marcar item como comprado.', 'danger');
         return;
       }
 
@@ -334,10 +373,12 @@ const Home = () => {
         );
 
         // Se todos os itens foram comprados, perguntar se quer marcar a lista toda
-        const allItemsBought = updatedItems.every((listItem) => listItem.purchasedAt !== null);
+        const allItemsBought = updatedItems.every(
+          (listItem) => listItem.purchasedAt !== null
+        );
         if (allItemsBought) {
           const confirmMarkList = window.confirm(
-            "Todos os itens foram comprados. Deseja marcar a lista inteira como comprada?"
+            'Todos os itens foram comprados. Deseja marcar a lista inteira como comprada?'
           );
 
           if (confirmMarkList) {
@@ -348,9 +389,9 @@ const Home = () => {
         return updatedItems;
       });
 
-      showToastNotification("Item marcado como comprado!", "success");
+      showToastNotification('Item marcado como comprado!', 'success');
     } catch (error) {
-      console.error("Erro ao marcar item como comprado:", error);
+      console.error('Erro ao marcar item como comprado:', error);
 
       setSelectedListItems((prevItems) =>
         prevItems.map((listItem) =>
@@ -360,32 +401,36 @@ const Home = () => {
         )
       );
 
-      showToastNotification("Erro ao marcar item como comprado.", "danger");
+      showToastNotification('Erro ao marcar item como comprado.', 'danger');
     }
   };
 
   const handleAskForItemDetails = (itemId) => {
     const item = selectedListItems.find((item) => item.itemListId === itemId);
     if (!item) {
-      console.error("Item não encontrado.");
+      console.error('Item não encontrado.');
       return;
     }
 
     setSelectedItem(item);
 
-    if (item.itemType === "common") {
+    if (item.itemType === 'common') {
       // Se for "common", já marca como comprado sem abrir modal
-      handleMarkItemAsBought(item, { categoryId: null, brandId: null, barcode: null });
+      handleMarkItemAsBought(item, {
+        categoryId: null,
+        brandId: null,
+        barcode: null,
+      });
     } else {
       // Caso contrário, pede os detalhes
-      setConfirmAction("markAsBought");
+      setConfirmAction('markAsBought');
       setShowItemConfirmModal(true);
     }
   };
 
   const handleSaveItemDetails = (data) => {
     if (!selectedItem) {
-      console.error("Nenhum item selecionado.");
+      console.error('Nenhum item selecionado.');
       return;
     }
 
@@ -394,7 +439,9 @@ const Home = () => {
       categoryId: data?.categoryId || selectedItem.categoryId || null,
       brandId: data?.brandId || selectedItem.brandId || null,
       barcode: data?.barcode || selectedItem.barcode || null,
+      marketId: data?.marketId || null,
     };
+    console.log("📦 Dados recebidos para salvar:", newItemDetails);
 
     setItemDetails(newItemDetails);
     setShowModal(false);
@@ -428,46 +475,46 @@ const Home = () => {
     if (confirmAction === 'deleteList') {
       return [
         {
-          text: "Sim, excluir",
-          className: "btn-danger",
+          text: 'Sim, excluir',
+          className: 'btn-danger',
           action: confirmDeleteList,
         },
         {
-          text: "Cancelar",
-          className: "btn-secondary",
+          text: 'Cancelar',
+          className: 'btn-secondary',
           action: () => setShowItemConfirmModal(false),
-        }
+        },
       ];
     } else if (confirmAction === 'deleteItem') {
       return [
         {
-          text: "Sim, excluir",
-          className: "btn-danger",
+          text: 'Sim, excluir',
+          className: 'btn-danger',
           action: confirmDeleteItem,
         },
         {
-          text: "Cancelar",
-          className: "btn-secondary",
+          text: 'Cancelar',
+          className: 'btn-secondary',
           action: () => setShowItemConfirmModal(false),
-        }
+        },
       ];
     } else if (confirmAction === 'markAsBought') {
       return [
         {
-          text: "Sim, adicionar detalhes",
-          className: "btn-primary",
+          text: 'Sim, adicionar detalhes',
+          className: 'btn-primary',
           action: () => setShowModal(true),
         },
         {
-          text: "Não, apenas marcar",
-          className: "btn-success",
+          text: 'Não, apenas marcar',
+          className: 'btn-success',
           action: () => handleConfirmAction('noDetails'),
         },
         {
-          text: "Cancelar",
-          className: "btn-secondary",
+          text: 'Cancelar',
+          className: 'btn-secondary',
           action: () => setShowItemConfirmModal(false),
-        }
+        },
       ];
     }
     return [];
@@ -475,11 +522,11 @@ const Home = () => {
 
   const getModalMessage = () => {
     if (confirmAction === 'deleteList') {
-      return "Você realmente deseja excluir esta lista?";
+      return 'Você realmente deseja excluir esta lista?';
     } else if (confirmAction === 'deleteItem') {
-      return "Você realmente deseja excluir este item?";
+      return 'Você realmente deseja excluir este item?';
     } else if (confirmAction === 'markAsBought') {
-      return "Você gostaria de fornecer informações adicionais (categoria, marca, código de barras) para este item?";
+      return 'Você gostaria de fornecer informações adicionais (categoria, marca, código de barras) para este item?';
     }
     return '';
   };
@@ -509,13 +556,17 @@ const Home = () => {
                     listName={selectedListName}
                     items={selectedListItems}
                     listId={selectedList}
-                    onEdit={(itemId, updatedItem) => handleEditItem(itemId, updatedItem)}
+                    onEdit={(itemId, updatedItem) =>
+                      handleEditItem(itemId, updatedItem)
+                    }
                     onDelete={(itemId) => handleDeleteItem(itemId)}
                     onAddNewItem={(newItem) => handleAddNewItem(newItem)}
                     onAskDetails={(itemId) => handleAskForItemDetails(itemId)}
                   />
                 ) : (
-                  <p className="text-center">Selecione uma lista para visualizar os itens.</p>
+                  <p className="text-center">
+                    Selecione uma lista para visualizar os itens.
+                  </p>
                 )}
               </div>
             </div>

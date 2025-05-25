@@ -1,184 +1,92 @@
+import fetchWrapper from "../utils/fetchWrapper";
 import { URL_BASE } from "../utils/base";
 import { getUserId } from "./authService";
 
 const API_URL = `${URL_BASE}/purchase`;
 
+// Helper para montar query string com params opcionais
+const buildQuery = (params) => {
+  return (
+    "?" +
+    Object.entries(params)
+      .filter(([_, v]) => v !== undefined && v !== null) // só inclui params com valor definido
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      .join("&")
+  );
+};
+
 const Purchase = {
-    createPurchase: async (itemId, quantity, price) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ itemId, userId, quantity, price }),
-            });
+  createPurchase: async (itemId, quantity, price, marketId) => {
+    const userId = getUserId();
+    const body = { itemId, userId, quantity, price };
+    if (marketId) body.marketId = marketId;
 
-            const data = await response.json();
-            if (response.ok) {
-                return { success: true, message: data.message, purchase: data.data };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+    return await fetchWrapper(API_URL, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  },
 
-    getTotalSpent: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/total-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
+  getTotalSpent: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/total-spent${query}`);
+  },
 
-            if (response.ok) {
-                return { success: true, totalSpent: parseFloat(data.data.totalSpent) };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+  getMostPurchased: async (limit, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, limit, marketId });
+    const data = await fetchWrapper(`${API_URL}/most-purchased${query}`);
 
-    getMostPurchased: async (limit) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/most-purchased?userId=${userId}&limit=${limit}`);
-            const data = await response.json();
+    return {
+      mostPurchased: data.map((item) => ({
+        name: item.itemName,
+        quantity: parseFloat(item.totalQuantity),
+      })),
+    };
+  },
 
-            if (response.ok) {
-                return {
-                    success: true,
-                    mostPurchased: data.data.map(item => ({
-                        name: item.itemName,
-                        quantity: parseFloat(item.totalQuantity),
-                    })),
-                };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+  getItemsPurchased: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/items-purchased${query}`);
+  },
 
-    getItemsPurchased: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/items-purchased?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
+  getAvgSpendPerPurchase: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/avg-spend-per-purchase${query}`);
+  },
 
-            if (response.ok) {
-                return { success: true, itemsPurchased: parseInt(data.data.totalQuantity, 10) };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+  getLargestPurchase: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/largest-purchase${query}`);
+  },
 
-    getAvgSpendPerPurchase: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/avg-spend-per-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
+  getAvgDailySpend: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/avg-daily-spend${query}`);
+  },
 
-            if (response.ok) {
-                return { success: true, avgSpendPerPurchase: parseFloat(data.data.avgSpendPerPurchase) };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+  getCategoryPurchases: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/category-purchases${query}`);
+  },
 
-    getLargestPurchase: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/largest-purchase?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
+  getComparisonSpent: async (startDate, endDate, limit, offset, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, limit, offset, marketId });
+    return await fetchWrapper(`${API_URL}/comparison-spent${query}`);
+  },
 
-            if (response.ok) {
-                return { success: true, largestPurchase: parseFloat(data.data) };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
-
-    getAvgDailySpend: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/avg-daily-spend?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                return { success: true, avgDailySpend: parseFloat(data.data.avgDailySpend) };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
-
-    getCategoryPurchases: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/category-purchases?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                return {
-                    success: true,
-                    categoryPurchases: data.data
-                };
-                
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
-
-    getComparisonSpent: async (startDate, endDate, limit, offset) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/comparison-spent?userId=${userId}&startDate=${startDate}&endDate=${endDate}&limit=${limit}&offset=${offset}`);
-            const responseData = await response.json();
-
-            if (response.ok && responseData && responseData.data.length > 0) {
-                return responseData;
-            } else {
-                throw new Error(responseData.error || "Erro desconhecido");
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
-
-    getTopItemsByValue: async (startDate, endDate) => {
-        try {
-            const userId = getUserId();
-            const response = await fetch(`${API_URL}/top-items-by-value?userId=${userId}&startDate=${startDate}&endDate=${endDate}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                return { success: true, topItemsByValue: data.data };
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    },
+  getTopItemsByValue: async (startDate, endDate, marketId) => {
+    const userId = getUserId();
+    const query = buildQuery({ userId, startDate, endDate, marketId });
+    return await fetchWrapper(`${API_URL}/top-items-by-value${query}`);
+  },
 };
 
 export default Purchase;

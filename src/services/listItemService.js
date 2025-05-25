@@ -63,7 +63,8 @@ const ListItem = {
         }
     },
 
-    markAsPurchased: async ({ itemListId, itemId, userId, categoryId, brandId, barcode, purchaseDate }) => {
+    markAsPurchased: async ({ itemListId, itemId, userId, categoryId, brandId, barcode, purchaseDate, marketId }) => {
+        
         try {
             const response = await fetch(`${API_URL}/purchase`, {
                 method: "POST",
@@ -77,7 +78,8 @@ const ListItem = {
                     categoryId,
                     brandId,
                     barcode,
-                    purchaseDate: purchaseDate
+                    purchaseDate,
+                    marketId
                 }),
             });
 

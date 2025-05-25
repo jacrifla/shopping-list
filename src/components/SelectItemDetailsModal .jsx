@@ -5,14 +5,16 @@ import categoryService from '../services/categoryService';
 import Select from './Select';
 import Input from './Input';
 import Button from './Button';
+import MarketSelect from './MarketSelect';
 
 const SelectItemDetailsModal = ({ show, onHide, onSave, selectedItem }) => {
   const [categoryId, setCategoryId] = useState(null);
   const [brandId, setBrandId] = useState(null);
   const [barcode, setBarcode] = useState('');
-
+  
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [marketId, setMarketId] = useState(null);
 
   useEffect(() => {
     const loadCategoriesAndBrands = async () => {
@@ -33,17 +35,19 @@ const SelectItemDetailsModal = ({ show, onHide, onSave, selectedItem }) => {
         setCategoryId(selectedItem.categoryId || null);
         setBrandId(selectedItem.brandId || null);
         setBarcode(selectedItem.barcode || '');
+        setMarketId(selectedItem.marketId || null);
       }
     } else {
       // Resetando os valores para o estado inicial quando o modal é fechado
       setCategoryId(null);
       setBrandId(null);
       setBarcode('');
+      setMarketId(null);
     }
   }, [show, selectedItem]);
 
   const handleSave = () => {
-    onSave({ categoryId, brandId, barcode });
+    onSave({ categoryId, brandId, barcode, marketId });
     onHide();
   };
 
@@ -86,6 +90,7 @@ const SelectItemDetailsModal = ({ show, onHide, onSave, selectedItem }) => {
             onChange={(e) => setBarcode(e.target.value)}
             icon="upc-scan"
           />
+          <MarketSelect value={marketId} onChange={setMarketId} />
         </Form>
       </Modal.Body>
       <Modal.Footer className="border-0 shadow-none d-flex gap-2">
