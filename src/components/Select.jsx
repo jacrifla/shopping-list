@@ -1,9 +1,21 @@
-import React from 'react';
-
-const Select = ({ label, value, onChange, options, icon, placeholder, keyField, displayField, ...props }) => {
+const Select = ({
+  label,
+  value,
+  onChange,
+  options = [],
+  icon,
+  placeholder,
+  keyField,
+  displayField,
+  ...props
+}) => {
   return (
     <div className="mb-3">
-      {label && <label htmlFor={label} className="form-label">{label}</label>}
+      {label && (
+        <label htmlFor={label} className="form-label">
+          {label}
+        </label>
+      )}
       <div className="input-group rounded border-0">
         {icon && (
           <span className="input-group-text">
@@ -17,7 +29,9 @@ const Select = ({ label, value, onChange, options, icon, placeholder, keyField, 
           onChange={onChange}
           {...props}
         >
-          <option value="" disabled>{placeholder}</option>
+          <option value="" disabled>
+            {placeholder}
+          </option>
           {options.map((option, index) => {
             return (
               <option key={option[keyField]} value={option[keyField]}>
@@ -25,7 +39,6 @@ const Select = ({ label, value, onChange, options, icon, placeholder, keyField, 
               </option>
             );
           })}
-
         </select>
       </div>
     </div>

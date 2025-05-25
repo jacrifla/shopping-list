@@ -4,7 +4,7 @@ import { getUserId } from "./authService";
 const API_URL = `${URL_BASE}/items`;
 
 const ItemsService = {
-    createItem: async (name, categoryId, brandId, barcode) => {
+    createItem: async (name, categoryId, brandId, unitId, barcode) => {
         const userId = getUserId();
         try {
             const response = await fetch(API_URL, {
@@ -12,7 +12,7 @@ const ItemsService = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, categoryId, brandId, barcode, userId }),
+                body: JSON.stringify({ name, categoryId, brandId, barcode, unitId, userId }),
             });
             const result = await response.json();
             if (response.ok) {
@@ -25,7 +25,7 @@ const ItemsService = {
         }
     },
 
-    updateItem: async (itemId, name, categoryId, brandId, barcode) => {
+    updateItem: async (itemId, name, categoryId, brandId, unitId, barcode) => {
         const updatedBy = getUserId();
         try {
             const response = await fetch(`${API_URL}/${itemId}`, {
@@ -33,7 +33,7 @@ const ItemsService = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, categoryId, brandId, barcode, updatedBy }),
+                body: JSON.stringify({ name, categoryId, brandId, barcode, unitId, updatedBy }),
             });
             const result = await response.json();
             if (response.ok) {

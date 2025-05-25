@@ -12,7 +12,7 @@ const UnitService = {
     },
 
     findAllUnits: async () => {
-        return await fetchWrapper(`${API_URL}/all`, {
+        return await fetchWrapper(`${API_URL}/`, {
             method: 'GET',
         });
     },
