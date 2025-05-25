@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import itemsService from '../services/itemsService';
 import categoryService from '../services/categoryService';
 import brandService from '../services/brandService';
+import unitService from '../services/unitService';
 
 const useItems = () => {
     const [allItems, setAllItems] = useState([]);
@@ -14,10 +15,13 @@ const useItems = () => {
         category: '',
         brand: '',
         categoryId: '',
-        brandId: ''
+        brandId: '',
+        unitId: '',
+        unitName: '',
     });
     const [isEditing, setIsEditing] = useState(false);
     const [toast, setToast] = useState({ show: false, message: '', type: '' });
+    const [units, setUnits] = useState([]);
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -46,10 +50,19 @@ const useItems = () => {
                 console.error(error.message);
             }
         };
+        const fetchUnits = async () => {
+            try {
+                const response = await unitService.findAllUnits();
+                setUnits(response);
+            } catch (error) {
+                console.error('Erro ao buscar unidades:', error);
+            }
+        };
 
         fetchItems();
         fetchCategories();
         fetchBrands();
+        fetchUnits();
     }, []);
 
     const handleItemSelect = (item) => {
@@ -61,7 +74,9 @@ const useItems = () => {
             category: item.categoryName,
             brand: item.brandName,
             categoryId: item.categoryId,
-            brandId: item.brandId
+            brandId: item.brandId,
+            unitId: item.unitId,
+            unitName: item.unitName,
         });
     };
 
@@ -76,6 +91,7 @@ const useItems = () => {
             barcode: item.barcode || null,
             categoryId: item.categoryId || null,
             brandId: item.brandId || null,
+            unitId: item.unitId || null,
         };
 
         try {
@@ -86,25 +102,27 @@ const useItems = () => {
                     itemData.itemName,
                     itemData.categoryId,
                     itemData.brandId,
-                    itemData.barcode
+                    itemData.barcode,
+                    itemData.unitId
                 );
 
                 setToast({ show: true, message: 'Item atualizado com sucesso!', type: 'success' });
 
-                setAllItems(allItems.map((i) =>
+                setAllItems(allItems.map(i =>
                     i.itemId === item.itemId ? { ...i, ...itemData } : i
                 ));
             } else {
                 const newItem = await itemsService.createItem(
-                    itemData.itemName, 
-                    itemData.categoryId, 
-                    itemData.brandId, 
-                    itemData.barcode
+                    itemData.itemName,
+                    itemData.categoryId,
+                    itemData.brandId,
+                    itemData.barcode,
+                    itemData.unitId
                 );
 
                 setAllItems(prevItems => [
                     ...prevItems,
-                    { ...itemData, itemId: newItem.itemId, category: itemData.categoryId, brand: itemData.brandId }
+                    { ...newItem }
                 ]);
                 setToast({ show: true, message: 'Item criado com sucesso!', type: 'success' });
             }
@@ -115,7 +133,7 @@ const useItems = () => {
         }
     };
 
-    const handleDeleteItem = async (itemId) => {        
+    const handleDeleteItem = async (itemId) => {
         try {
             await itemsService.deleteItem(itemId);
             setToast({ show: true, message: 'Item excluído com sucesso!', type: 'success' });
@@ -150,7 +168,8 @@ const useItems = () => {
         handleSaveEditItem,
         handleDeleteItem,
         setToast,
-        setItem
+        setItem,
+        units,
     };
 };
 
